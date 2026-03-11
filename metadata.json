@@ -1,0 +1,8 @@
+{
+  "name": "Panda_Graphic Portfolio - Victor Gabriel Archange",
+  "description": "A high-end, bold, and creative portfolio for graphic designer Victor Gabriel Archange Yombi Mangamba, featuring an integrated CMS, booking system, and multi-language support (FR, EN, DE).",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
