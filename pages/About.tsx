@@ -26,21 +26,21 @@ const About: React.FC<{ lang: Language }> = ({ lang }) => {
           </div>
         </div>
         <div className="animate-slide-up animate-delay-200">
-          <span className="text-panda-gold font-display text-xs tracking-[0.6em] uppercase mb-8 block">Le Créateur</span>
+          <span className="text-panda-gold font-display text-xs tracking-[0.6em] uppercase mb-8 block">{t.about.creator}</span>
           <h1 className="text-5xl md:text-8xl font-display font-bold tracking-tighter mb-12 uppercase leading-none text-panda-black dark:text-panda-white">
-            Victor Gabriel <br/> <span className="text-panda-gold">Archange</span>
+            {t.about.title.split(' ').slice(0, -1).join(' ')} <br/> <span className="text-panda-gold">{t.about.title.split(' ').slice(-1)}</span>
           </h1>
           <div className="space-y-8 text-xl text-panda-black/70 dark:text-panda-white/70 leading-relaxed font-light">
             <p className="first-letter:text-5xl first-letter:text-panda-gold first-letter:font-display first-letter:mr-3 first-letter:float-left">
               {t.about.bio}
             </p>
             <p>
-              Sous le pseudonyme de <strong>Panda_Graphic</strong>, j'œuvre à la création d'écosystèmes visuels qui transcendent les simples tendances. Mon approche combine la rigueur analytique et l'instinct créatif pur.
+              {t.about.pseudonym}
             </p>
             <div className="pt-10 border-t border-panda-black/10 dark:border-panda-white/10 flex flex-col items-start relative overflow-hidden p-8 rounded-3xl bg-panda-black/5 dark:bg-panda-white/5">
               <Quote className="text-panda-gold/40 mb-6" size={50} />
               <p className="italic text-panda-black dark:text-panda-white font-medium text-2xl leading-relaxed relative z-10">
-                "Chaque design est une promesse tenue entre une marque et son audience. Je suis celui qui rend cette promesse inoubliable."
+                {t.about.quote}
               </p>
               <div className="absolute top-0 right-0 w-32 h-32 marble-texture opacity-10 rounded-bl-full pointer-events-none" />
             </div>
@@ -51,9 +51,9 @@ const About: React.FC<{ lang: Language }> = ({ lang }) => {
       {/* Values / Pillars */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-10 mb-40 reveal">
         {[
-          { icon: <Sparkles size={40} />, title: "Excellence", desc: "La quête constante de la perfection dans chaque courbe et chaque nuance." },
-          { icon: <Zap size={40} />, title: "Impact", desc: "Créer un choc visuel immédiat qui ancre votre marque dans l'esprit collectif." },
-          { icon: <Target size={40} />, title: "Stratégie", desc: "Le design n'est rien sans un but précis. Chaque pixel sert un objectif business." }
+          { icon: <Sparkles size={40} />, title: t.about.pillars.excellence.title, desc: t.about.pillars.excellence.desc },
+          { icon: <Zap size={40} />, title: t.about.pillars.impact.title, desc: t.about.pillars.impact.desc },
+          { icon: <Target size={40} />, title: t.about.pillars.strategy.title, desc: t.about.pillars.strategy.desc }
         ].map((item, i) => (
           <div key={i} className="p-12 border border-panda-black/10 dark:border-panda-white/10 rounded-[2.5rem] bg-panda-black/5 dark:bg-panda-white/5 hover-gold-glow group transition-all duration-500">
             <div className="text-panda-gold mb-8 group-hover:scale-125 transition-transform duration-500">{item.icon}</div>
@@ -66,10 +66,10 @@ const About: React.FC<{ lang: Language }> = ({ lang }) => {
       {/* Stats Section with Marble Accents */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-12 border-t border-panda-black/10 dark:border-panda-white/10 pt-20 reveal">
         {[
-          { label: 'Projets Signés', value: '150+' },
-          { label: 'Pays d\'intervention', value: '12' },
-          { label: 'Années d\'Art', value: '8' },
-          { label: 'Sourires Clients', value: '100%' }
+          { label: t.about.stats.projects, value: '150+' },
+          { label: t.about.stats.countries, value: '12' },
+          { label: t.about.stats.years, value: '8' },
+          { label: t.about.stats.smiles, value: '100%' }
         ].map((stat, i) => (
           <div key={i} className="text-center group relative p-8">
             <div className="absolute inset-0 marble-texture opacity-0 group-hover:opacity-5 transition-opacity duration-700 rounded-3xl -z-10" />

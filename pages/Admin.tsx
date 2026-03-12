@@ -43,6 +43,9 @@ const Admin: React.FC<AdminProps> = ({
   const [fbLink, setFbLink] = useState(settings.socialLinks.facebook);
   const [igLink, setIgLink] = useState(settings.socialLinks.instagram);
   const [waNumber, setWaNumber] = useState(settings.socialLinks.whatsapp);
+  const [taglineFr, setTaglineFr] = useState(settings.logoTagline.fr);
+  const [taglineEn, setTaglineEn] = useState(settings.logoTagline.en);
+  const [taglineDe, setTaglineDe] = useState(settings.logoTagline.de);
 
   // Appointment edit states
   const [editingAppointment, setEditingAppointment] = useState<Appointment | null>(null);
@@ -158,17 +161,6 @@ const Admin: React.FC<AdminProps> = ({
     }
   };
 
-  const handleSaveSettings = () => {
-    onUpdateSettings({
-      socialLinks: {
-        facebook: fbLink,
-        instagram: igLink,
-        whatsapp: waNumber
-      }
-    });
-    alert('Paramètres enregistrés !');
-  };
-
   const handleEditAppointment = (app: Appointment) => {
     setEditingAppointment(app);
     setEditDate(app.date);
@@ -187,6 +179,22 @@ const Admin: React.FC<AdminProps> = ({
     onUpdateAppointment(updated);
     setEditingAppointment(null);
     alert('Rendez-vous mis à jour ! Le client a été notifié (simulation).');
+  };
+
+  const handleSaveSettings = () => {
+    onUpdateSettings({
+      socialLinks: {
+        facebook: fbLink,
+        instagram: igLink,
+        whatsapp: waNumber
+      },
+      logoTagline: {
+        fr: taglineFr,
+        en: taglineEn,
+        de: taglineDe
+      }
+    });
+    alert('Paramètres mis à jour !');
   };
 
   if (!isAdmin) {
@@ -450,6 +458,94 @@ const Admin: React.FC<AdminProps> = ({
                ))}
             </div>
           )}
+        </div>
+      )}
+
+      {tab === 'settings' && (
+        <div className="max-w-2xl mx-auto space-y-12 animate-in slide-in-from-bottom-10 duration-700">
+          <div className="bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 rounded-[3rem] p-12 backdrop-blur-xl">
+            <h2 className="text-2xl font-display font-bold mb-8 uppercase tracking-tighter text-panda-black dark:text-panda-white flex items-center gap-4">
+              <Settings className="text-panda-gold" /> Paramètres du Site
+            </h2>
+            
+            <div className="space-y-8">
+              {/* Social Links */}
+              <div className="space-y-4">
+                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-panda-gold">Réseaux Sociaux</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 ml-4">Facebook URL</label>
+                    <input 
+                      type="text" 
+                      value={fbLink}
+                      onChange={(e) => setFbLink(e.target.value)}
+                      className="w-full bg-panda-black/5 dark:bg-panda-black border border-panda-black/10 dark:border-panda-white/10 px-6 py-4 rounded-2xl outline-none focus:border-panda-gold transition-all text-panda-black dark:text-panda-white"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 ml-4">Instagram URL</label>
+                    <input 
+                      type="text" 
+                      value={igLink}
+                      onChange={(e) => setIgLink(e.target.value)}
+                      className="w-full bg-panda-black/5 dark:bg-panda-black border border-panda-black/10 dark:border-panda-white/10 px-6 py-4 rounded-2xl outline-none focus:border-panda-gold transition-all text-panda-black dark:text-panda-white"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 ml-4">WhatsApp Number</label>
+                    <input 
+                      type="text" 
+                      value={waNumber}
+                      onChange={(e) => setWaNumber(e.target.value)}
+                      className="w-full bg-panda-black/5 dark:bg-panda-black border border-panda-black/10 dark:border-panda-white/10 px-6 py-4 rounded-2xl outline-none focus:border-panda-gold transition-all text-panda-black dark:text-panda-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              {/* Tagline */}
+              <div className="space-y-4">
+                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-panda-gold">Texte sous Logo (Tagline)</h3>
+                <div className="grid grid-cols-1 gap-4">
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 ml-4">Français</label>
+                    <input 
+                      type="text" 
+                      value={taglineFr}
+                      onChange={(e) => setTaglineFr(e.target.value)}
+                      className="w-full bg-panda-black/5 dark:bg-panda-black border border-panda-black/10 dark:border-panda-white/10 px-6 py-4 rounded-2xl outline-none focus:border-panda-gold transition-all text-panda-black dark:text-panda-white"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 ml-4">English</label>
+                    <input 
+                      type="text" 
+                      value={taglineEn}
+                      onChange={(e) => setTaglineEn(e.target.value)}
+                      className="w-full bg-panda-black/5 dark:bg-panda-black border border-panda-black/10 dark:border-panda-white/10 px-6 py-4 rounded-2xl outline-none focus:border-panda-gold transition-all text-panda-black dark:text-panda-white"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-[10px] font-black uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 ml-4">Deutsch</label>
+                    <input 
+                      type="text" 
+                      value={taglineDe}
+                      onChange={(e) => setTaglineDe(e.target.value)}
+                      className="w-full bg-panda-black/5 dark:bg-panda-black border border-panda-black/10 dark:border-panda-white/10 px-6 py-4 rounded-2xl outline-none focus:border-panda-gold transition-all text-panda-black dark:text-panda-white"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <button 
+                onClick={handleSaveSettings}
+                className="w-full py-6 bg-panda-gold text-panda-black font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-panda-gold/90 transition-all shadow-xl shadow-panda-gold/20 flex items-center justify-center gap-3"
+              >
+                <CheckCircle size={20} />
+                Enregistrer les Paramètres
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </div>

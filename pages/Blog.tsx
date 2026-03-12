@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { BlogPost, Language, BlogComment } from '../types';
+import { TRANSLATIONS } from '../constants';
 import { 
   Calendar, User, ArrowRight, Heart, MessageCircle, 
   Share2, X, Send, Film, Image as ImageIcon, Sparkles, Check
@@ -14,6 +15,7 @@ interface BlogProps {
 }
 
 const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
+  const t = TRANSLATIONS[lang];
   const [selectedPost, setSelectedPost] = useState<BlogPost | null>(null);
   const [commentName, setCommentName] = useState('');
   const [commentText, setCommentText] = useState('');
@@ -53,7 +55,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
     
     const shareData = {
       title: post.title[lang],
-      text: `Découvrez cet article sur Panda_Graphic : ${post.title[lang]}`,
+      text: `${t.blog.headerDesc} : ${post.title[lang]}`,
       url: shareUrl,
     };
 
@@ -73,7 +75,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
         setTimeout(() => setShareStatus(null), 3000);
       } catch (clipErr) {
         console.error('Impossible de copier le lien :', clipErr);
-        alert('Lien : ' + shareUrl); // Dernier recours
+        // alert('Lien : ' + shareUrl); // Dernier recours
       }
     }
   };
@@ -105,19 +107,19 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
       <header className="mb-24 reveal text-center">
         <div className="inline-flex items-center space-x-3 mb-6 bg-panda-black/5 dark:bg-panda-white/5 px-6 py-2 rounded-full border border-panda-black/10 dark:border-white/10">
           <Sparkles size={16} className="text-panda-gold animate-pulse" />
-          <span className="text-panda-gold font-display text-xs tracking-[0.5em] uppercase block">Pensées & Insights</span>
+          <span className="text-panda-gold font-display text-xs tracking-[0.5em] uppercase block">{t.blog.headerTag}</span>
         </div>
         <h1 className="text-6xl md:text-9xl font-display font-bold tracking-tighter mb-8 uppercase leading-none text-panda-black dark:text-panda-white">
-          L'ATELIER <span className="text-panda-gold">BLOG</span>
+          {t.blog.headerTitle.split(' ').slice(0, -1).join(' ')} <span className="text-panda-gold">{t.blog.headerTitle.split(' ').slice(-1)}</span>
         </h1>
         <p className="text-xl md:text-2xl text-panda-black/60 dark:text-panda-white/60 max-w-3xl mx-auto font-light leading-relaxed">
-          Décryptage des tendances, coulisses de création et réflexions sur le design de prestige par Victor Gabriel Archange.
+          {t.blog.headerDesc}
         </p>
       </header>
 
       {posts.length === 0 ? (
         <div className="text-center py-40 border border-dashed border-panda-black/10 dark:border-panda-white/10 rounded-[3rem] bg-panda-black/5 dark:bg-panda-white/5">
-          <p className="text-panda-black/60 dark:text-panda-white/40 italic uppercase tracking-widest text-xs font-bold">De nouveaux articles arrivent bientôt...</p>
+          <p className="text-panda-black/60 dark:text-panda-white/40 italic uppercase tracking-widest text-xs font-bold">{t.blog.noPosts}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 gap-16">
@@ -190,7 +192,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
                     {shareStatus === post.id ? (
                       <>
                         <Check size={16} />
-                        <span className="text-[10px] font-bold uppercase tracking-widest">Lien copié</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest">{t.blog.linkCopied}</span>
                       </>
                     ) : (
                       <Share2 size={16} />
@@ -207,7 +209,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
               </p>
               
               <div className="flex items-center space-x-3 text-panda-gold font-black uppercase tracking-widest text-[10px] group-hover:translate-x-3 transition-transform duration-500">
-                <span>Découvrir l'article</span>
+                <span>{t.blog.discoverPost}</span>
                 <ArrowRight size={14} />
               </div>
             </article>
@@ -243,7 +245,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
                    <div className="flex items-center space-x-6 text-[10px] font-black uppercase tracking-[0.4em] text-panda-gold">
                       <span>{selectedPost.date}</span>
                       <span className="w-2 h-2 bg-panda-black/10 dark:bg-panda-white/10 rounded-full" />
-                      <span className="text-panda-black/50 dark:text-panda-white/30">Par Victor Gabriel Archange</span>
+                      <span className="text-panda-black/50 dark:text-panda-white/30">{t.blog.by}</span>
                    </div>
                    <div className="flex items-center space-x-6">
                       <button 
@@ -266,7 +268,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
                             <Heart size={20} className={selectedPost.likes > 0 ? "fill-red-500 text-red-500" : ""} />
                           )}
                         </div>
-                        <span className="font-bold text-panda-black dark:text-panda-white">{selectedPost.likes} <span className="text-[10px] text-panda-black/60 dark:text-panda-white/40 uppercase">Likes</span></span>
+                        <span className="font-bold text-panda-black dark:text-panda-white">{selectedPost.likes} <span className="text-[10px] text-panda-black/60 dark:text-panda-white/40 uppercase">{t.blog.likes}</span></span>
                       </button>
                       <button 
                         onClick={(e) => handleShare(selectedPost, e)}
@@ -292,15 +294,15 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
                 <div className="pt-20 border-t border-panda-black/10 dark:border-panda-white/10">
                    <div className="flex items-center space-x-4 mb-12">
                       <MessageCircle size={24} className="text-panda-gold" />
-                      <h3 className="text-2xl font-display uppercase tracking-tighter text-panda-black dark:text-panda-white">Commentaires <span className="text-panda-black/40 dark:text-panda-white/20 text-lg">({selectedPost.comments.length})</span></h3>
+                      <h3 className="text-2xl font-display uppercase tracking-tighter text-panda-black dark:text-panda-white">{t.blog.comments} <span className="text-panda-black/40 dark:text-panda-white/20 text-lg">({selectedPost.comments.length})</span></h3>
                    </div>
 
                    <form onSubmit={handleAddComment} className="bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 p-10 rounded-[2.5rem] mb-16">
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                         <div className="space-y-2">
-                           <label className="text-[10px] uppercase font-black tracking-widest text-panda-gold block ml-2">Votre Nom</label>
+                           <label className="text-[10px] uppercase font-black tracking-widest text-panda-gold block ml-2">{t.blog.yourName}</label>
                            <input 
-                              placeholder="Archange Yombi"
+                              placeholder={t.blog.placeholderName}
                               value={commentName}
                               onChange={(e) => setCommentName(e.target.value)}
                               className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 px-6 py-4 rounded-2xl outline-none focus:border-panda-gold transition-all text-panda-black dark:text-panda-white"
@@ -309,9 +311,9 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
                         </div>
                       </div>
                       <div className="space-y-2 mb-8">
-                         <label className="text-[10px] uppercase font-black tracking-widest text-panda-gold block ml-2">Votre Réaction</label>
+                         <label className="text-[10px] uppercase font-black tracking-widest text-panda-gold block ml-2">{t.blog.yourReaction}</label>
                          <textarea 
-                            placeholder="Partagez vos impressions..."
+                            placeholder={t.blog.placeholderText}
                             value={commentText}
                             onChange={(e) => setCommentText(e.target.value)}
                             className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 px-6 py-4 rounded-2xl outline-none focus:border-panda-gold transition-all h-32 text-panda-black dark:text-panda-white"
@@ -319,13 +321,13 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
                          />
                       </div>
                       <button className="px-12 py-4 bg-panda-gold text-panda-black font-bold uppercase tracking-widest text-xs rounded-xl hover:scale-105 active:scale-95 transition-all flex items-center space-x-3 shadow-xl shadow-panda-gold/10">
-                         <span>Envoyer mon avis</span>
+                         <span>{t.blog.submitComment}</span>
                          <Send size={16} />
                       </button>
                    </form>
                            <div className="space-y-8">
                       {selectedPost.comments.length === 0 ? (
-                        <p className="text-panda-black/40 dark:text-panda-white/20 italic text-center py-10 uppercase tracking-widest text-[10px]">Soyez le premier à réagir...</p>
+                        <p className="text-panda-black/40 dark:text-panda-white/20 italic text-center py-10 uppercase tracking-widest text-[10px]">{t.blog.firstComment}</p>
                       ) : (
                         selectedPost.comments.map((comment) => (
                           <div key={comment.id} className="p-8 bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/5 dark:border-panda-white/5 rounded-3xl flex items-start space-x-6">

@@ -18,6 +18,16 @@ import Blog from './pages/Blog';
 import Contact from './pages/Contact';
 import Admin from './pages/Admin';
 
+const ScrollToTop = () => {
+  const { pathname } = useLocation();
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [pathname]);
+
+  return null;
+};
+
 const NavLinks: React.FC<{ lang: Language; t: any; setIsMenuOpen: (o: boolean) => void }> = ({ lang, t, setIsMenuOpen }) => {
   const location = useLocation();
   
@@ -64,12 +74,21 @@ const App: React.FC = () => {
   const [projects, setProjects] = useState<Project[]>(INITIAL_PROJECTS);
   const [posts, setPosts] = useState<BlogPost[]>(INITIAL_POSTS);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
-  const [settings, setSettings] = useState<AppSettings>({
-    socialLinks: {
-      facebook: 'https://facebook.com/panda_graphic',
-      instagram: 'https://instagram.com/panda_graphic',
-      whatsapp: '654491319'
-    }
+  const [settings, setSettings] = useState<AppSettings>(() => {
+    const saved = localStorage.getItem('appSettings');
+    if (saved) return JSON.parse(saved);
+    return {
+      socialLinks: {
+        facebook: 'https://facebook.com/panda_graphic',
+        instagram: 'https://instagram.com/panda_graphic',
+        whatsapp: '654491319'
+      },
+      logoTagline: {
+        fr: 'L\'excellence visuelle par Victor Gabriel Archange',
+        en: 'Visual Excellence by Victor Gabriel Archange',
+        de: 'Visuelle Exzellenz von Victor Gabriel Archange'
+      }
+    };
   });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
@@ -98,7 +117,25 @@ const App: React.FC = () => {
   const addProject = (p: Project) => setProjects([...projects, p]);
   const deleteProject = (id: string) => setProjects(projects.filter(p => p.id !== id));
   
-  const addPost = (p: BlogPost) => setPosts([...posts, p]);
+  const addPost = async (p: BlogPost) => {
+    setPosts([...posts, p]);
+    
+    try {
+      await fetch('/api/notify-subscribers', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          postTitle: p.title[lang],
+          postContent: p.content[lang],
+          postUrl: `${window.location.origin}/#/blog`
+        }),
+      });
+    } catch (error) {
+      console.error('Error notifying subscribers:', error);
+    }
+  };
   const deletePost = (id: string) => setPosts(posts.filter(p => p.id !== id));
   const updatePost = (updatedPost: BlogPost) => {
     setPosts(posts.map(p => p.id === updatedPost.id ? updatedPost : p));
@@ -137,7 +174,10 @@ const App: React.FC = () => {
     setAppointments(appointments.filter(a => a.id !== id));
   };
 
-  const updateSettings = (newSettings: AppSettings) => setSettings(newSettings);
+  const updateSettings = (newSettings: AppSettings) => {
+    setSettings(newSettings);
+    localStorage.setItem('appSettings', JSON.stringify(newSettings));
+  };
 
   const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
@@ -147,6 +187,7 @@ const App: React.FC = () => {
 
   return (
     <Router>
+      <ScrollToTop />
       <div className={`min-h-screen font-sans transition-colors duration-500 selection:bg-panda-gold selection:text-panda-black ${
         theme === 'dark' ? 'bg-panda-black text-panda-white' : 'bg-white text-panda-black'
       }`}>
@@ -164,7 +205,10 @@ const App: React.FC = () => {
           <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2 group">
               <div className="w-10 h-10 bg-panda-gold rounded-full flex items-center justify-center text-panda-black font-black text-xl group-hover:rotate-[360deg] transition-transform duration-1000">P</div>
-              <span className="font-display text-xl font-bold tracking-tighter text-panda-black dark:text-panda-white group-hover:text-panda-gold transition-colors">PANDA<span className="text-panda-gold">_</span>GRAPHIC</span>
+              <div className="flex flex-col">
+                <span className="font-display text-xl font-bold tracking-tighter text-panda-black dark:text-panda-white group-hover:text-panda-gold transition-colors leading-none">PANDA<span className="text-panda-gold">_</span>GRAPHIC</span>
+                <span className="text-[8px] uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 font-bold mt-1">{settings.logoTagline[lang]}</span>
+              </div>
             </Link>
 
             <div className="hidden md:flex items-center space-x-10">
@@ -205,10 +249,10 @@ const App: React.FC = () => {
               animate={{ opacity: 1, x: 0 }}
               exit={{ opacity: 0, x: '100%' }}
               transition={{ type: 'spring', damping: 25, stiffness: 200 }}
-              className="fixed inset-0 z-40 bg-panda-black/95 backdrop-blur-2xl flex flex-col items-center justify-center space-y-8 md:hidden"
+              className="fixed inset-0 z-40 bg-white/95 dark:bg-panda-black/95 backdrop-blur-2xl flex flex-col items-center justify-center space-y-8 md:hidden text-panda-black dark:text-panda-white"
             >
               <div className="absolute top-20 right-6">
-                <button onClick={() => setIsMenuOpen(false)} className="p-4 bg-panda-white/5 rounded-full text-panda-gold">
+                <button onClick={() => setIsMenuOpen(false)} className="p-4 bg-panda-black/5 dark:bg-panda-white/5 rounded-full text-panda-gold">
                   <X size={32} />
                 </button>
               </div>
@@ -228,15 +272,29 @@ const App: React.FC = () => {
                   </Link>
                 </motion.div>
               ))}
-              <motion.button 
-                initial={{ opacity: 0 }}
-                animate={{ opacity: 1 }}
-                transition={{ delay: 0.5 }}
-                onClick={() => { toggleLang(); setIsMenuOpen(false); }} 
-                className="text-xl flex items-center space-x-3 bg-panda-white/5 px-8 py-4 rounded-full border border-panda-white/10"
-              >
-                <Globe /> <span>{lang.toUpperCase()}</span>
-              </motion.button>
+              
+              <div className="flex flex-col space-y-4 w-full px-12">
+                <motion.button 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.5 }}
+                  onClick={toggleTheme}
+                  className="w-full text-xl flex items-center justify-center space-x-3 bg-panda-black/5 dark:bg-panda-white/5 px-8 py-4 rounded-full border border-panda-black/10 dark:border-panda-white/10"
+                >
+                  {theme === 'dark' ? <Sun /> : <Moon />}
+                  <span>{theme === 'dark' ? t.common.lightMode : t.common.darkMode}</span>
+                </motion.button>
+
+                <motion.button 
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ delay: 0.6 }}
+                  onClick={() => { toggleLang(); setIsMenuOpen(false); }} 
+                  className="w-full text-xl flex items-center justify-center space-x-3 bg-panda-black/5 dark:bg-panda-white/5 px-8 py-4 rounded-full border border-panda-black/10 dark:border-panda-white/10"
+                >
+                  <Globe /> <span>{lang.toUpperCase()}</span>
+                </motion.button>
+              </div>
             </motion.div>
           )}
         </AnimatePresence>
@@ -274,11 +332,12 @@ const App: React.FC = () => {
         <footer className="bg-panda-black/5 dark:bg-panda-black/40 backdrop-blur-sm border-t border-panda-black/10 dark:border-panda-white/10 py-12 px-6">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
-              <h3 className="font-display text-xl mb-4 text-panda-gold">PANDA_GRAPHIC</h3>
+              <h3 className="font-display text-xl mb-2 text-panda-gold">PANDA_GRAPHIC</h3>
+              <p className="text-[10px] uppercase tracking-widest font-black text-panda-black/40 dark:text-panda-white/40 mb-4">{settings.logoTagline[lang]}</p>
               <p className="text-panda-black/60 dark:text-panda-white/60 max-w-xs">{t.about.bio}</p>
             </div>
             <div className="space-y-4">
-              <h4 className="font-bold text-panda-gold uppercase tracking-widest text-sm">Quick Links</h4>
+              <h4 className="font-bold text-panda-gold uppercase tracking-widest text-sm">{t.common.quickLinks}</h4>
               <ul className="grid grid-cols-2 gap-2 text-sm text-panda-black/70 dark:text-panda-white/70">
                 {Object.entries(t.nav).map(([key, label]) => (
                   <li key={key}><Link to={key === 'home' ? '/' : `/${key}`} className="hover:text-panda-gold text-panda-black/70 dark:text-panda-white/70">{label}</Link></li>
@@ -286,7 +345,7 @@ const App: React.FC = () => {
               </ul>
             </div>
             <div className="space-y-4">
-              <h4 className="font-bold text-panda-gold uppercase tracking-widest text-sm">Connect</h4>
+              <h4 className="font-bold text-panda-gold uppercase tracking-widest text-sm">{t.common.connect}</h4>
               <div className="flex space-x-4">
                 <a 
                   href={settings.socialLinks.facebook} 
@@ -315,7 +374,7 @@ const App: React.FC = () => {
               </div>
               <div className="pt-6 border-t border-panda-black/5 dark:border-panda-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
                 <Link to="/admin" className="text-[10px] text-panda-black/30 dark:text-panda-white/30 uppercase tracking-widest hover:text-panda-gold transition-colors">
-                  © 2024 Victor Gabriel Archange Yombi Mangamba
+                  {t.common.copyright}
                 </Link>
               </div>
             </div>

@@ -3,6 +3,25 @@ import { createServer as createViteServer } from "vite";
 import path from "path";
 import nodemailer from "nodemailer";
 import cors from "cors";
+import fs from "fs";
+
+const SUBSCRIBERS_FILE = path.join(process.cwd(), "subscribers.json");
+
+// Helper to get subscribers
+function getSubscribers(): string[] {
+  if (!fs.existsSync(SUBSCRIBERS_FILE)) return [];
+  try {
+    const data = fs.readFileSync(SUBSCRIBERS_FILE, "utf-8");
+    return JSON.parse(data);
+  } catch (e) {
+    return [];
+  }
+}
+
+// Helper to save subscribers
+function saveSubscribers(subscribers: string[]) {
+  fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2));
+}
 
 async function startServer() {
   const app = express();
@@ -12,6 +31,70 @@ async function startServer() {
   app.use(express.json());
 
   // API routes
+  app.post("/api/subscribe", (req, res) => {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email requis" });
+    
+    const subscribers = getSubscribers();
+    if (!subscribers.includes(email)) {
+      subscribers.push(email);
+      saveSubscribers(subscribers);
+    }
+    
+    res.status(200).json({ message: "Inscription réussie" });
+  });
+
+  app.post("/api/notify-subscribers", async (req, res) => {
+    const { postTitle, postContent, postUrl } = req.body;
+    const subscribers = getSubscribers();
+    
+    if (subscribers.length === 0) {
+      return res.status(200).json({ message: "Aucun abonné à notifier" });
+    }
+
+    const emailUser = process.env.EMAIL_USER;
+    const emailPass = process.env.EMAIL_PASS;
+
+    if (!emailUser || !emailPass) {
+      console.warn("Credentials missing for newsletter notification");
+      return res.status(200).json({ message: "Notification simulée (identifiants manquants)" });
+    }
+
+    try {
+      const transporter = nodemailer.createTransport({
+        service: "gmail",
+        auth: {
+          user: emailUser,
+          pass: emailPass,
+        },
+      });
+
+      const mailOptions = {
+        from: emailUser,
+        to: subscribers.join(","),
+        subject: `Nouvel article : ${postTitle}`,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; border: 1px solid #eee; border-radius: 10px;">
+            <h2 style="color: #D4AF37;">Nouvel article sur le blog Panda_Graphic !</h2>
+            <h3 style="color: #333;">${postTitle}</h3>
+            <p style="color: #666; line-height: 1.6;">${postContent.substring(0, 200)}...</p>
+            <div style="margin-top: 30px;">
+              <a href="${postUrl}" style="background-color: #D4AF37; color: #000; padding: 12px 24px; text-decoration: none; font-weight: bold; border-radius: 5px;">Lire l'article complet</a>
+            </div>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
+            <p style="color: #999; font-size: 10px;">Vous recevez cet e-mail car vous êtes abonné à la newsletter Panda_Graphic.</p>
+          </div>
+        `,
+      };
+
+      await transporter.sendMail(mailOptions);
+      res.status(200).json({ message: "Abonnés notifiés avec succès" });
+    } catch (error) {
+      console.error("Error notifying subscribers:", error);
+      res.status(500).json({ error: "Erreur lors de la notification" });
+    }
+  });
+
   app.post("/api/appointments", async (req, res) => {
     const appointment = req.body;
     

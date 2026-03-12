@@ -28,6 +28,20 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
     navigate('/portfolio', { state: { filter: category } });
   };
 
+  const getCategoryLabel = (cat: ProjectCategory) => {
+    const categories = t.portfolio.categories;
+    switch (cat) {
+      case ProjectCategory.ALL: return categories.all;
+      case ProjectCategory.GALLERY: return categories.gallery;
+      case ProjectCategory.LOGOTYPE: return categories.logotype;
+      case ProjectCategory.BRANDING: return categories.branding;
+      case ProjectCategory.SOCIAL: return categories.social;
+      case ProjectCategory.PACKAGING: return categories.packaging;
+      case ProjectCategory.UIUX: return categories.uiux;
+      default: return cat;
+    }
+  };
+
   return (
     <div className="space-y-40 pb-32 text-panda-black dark:text-panda-white">
       {/* Hero Section - The Grand Entrance */}
@@ -37,7 +51,7 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
         <div className="absolute bottom-1/4 -right-20 w-80 h-80 bg-panda-green/10 blur-[120px] rounded-full animate-float" />
         
         <div className="animate-slide-up">
-          <span className="text-panda-gold font-display text-sm tracking-[0.5em] uppercase mb-8 block">Victor Gabriel Archange</span>
+          <span className="text-panda-gold font-display text-sm tracking-[0.5em] uppercase mb-8 block">{t.hero.title}</span>
           <h1 className="font-display text-6xl md:text-9xl font-bold tracking-tighter mb-8 leading-none">
             PANDA<span className="text-panda-gold">_</span>GRAPHIC
           </h1>
@@ -57,7 +71,7 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
               to="/contact" 
               className="group inline-flex items-center px-12 py-6 border border-panda-black/20 dark:border-panda-white/20 hover:border-panda-gold text-panda-black dark:text-panda-white font-bold uppercase tracking-[0.3em] transition-all hover:text-panda-gold"
             >
-              Réserver une consultation
+              {t.hero.consultation}
             </Link>
           </div>
         </div>
@@ -73,16 +87,16 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
             </div>
           </div>
           <div className="space-y-8">
-            <span className="text-panda-gold font-display text-xs tracking-[0.6em] uppercase block">L'Esprit Créatif</span>
+            <span className="text-panda-gold font-display text-xs tracking-[0.6em] uppercase block">{t.home.creativeSpirit}</span>
             <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter">Victor Gabriel <span className="text-panda-gold">Archange</span></h2>
             <p className="text-panda-black/60 dark:text-panda-white/60 text-xl leading-relaxed italic border-l-4 border-panda-gold pl-8">
-              "Le design n'est pas ce que je fais, c'est ce que je suis. Chaque projet est une extension de ma vision pour un monde plus élégant."
+              {t.home.aboutQuote}
             </p>
             <p className="text-panda-black/70 dark:text-panda-white/70 text-lg font-light leading-relaxed">
-              Designer graphique basé à Paris, j'accompagne les marques visionnaires dans la création d'identités mémorables.
+              {t.home.aboutBio}
             </p>
             <Link to="/about" className="inline-flex items-center space-x-4 text-panda-gold hover:text-panda-black dark:hover:text-white transition-all group">
-              <span className="font-bold uppercase tracking-widest text-sm border-b border-panda-gold/30 pb-1 group-hover:border-panda-black dark:group-hover:border-white">Découvrir mon parcours</span>
+              <span className="font-bold uppercase tracking-widest text-sm border-b border-panda-gold/30 pb-1 group-hover:border-panda-black dark:group-hover:border-white">{t.home.discoverPath}</span>
               <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
             </Link>
           </div>
@@ -92,8 +106,8 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
       {/* Services Recap - The Expertise Grid */}
       <section className="max-w-7xl mx-auto px-6 reveal">
         <div className="text-center mb-24">
-          <span className="text-panda-gold font-display text-xs tracking-[0.6em] uppercase mb-6 block">Nos Domaines d'Action</span>
-          <h2 className="text-5xl md:text-8xl font-display mb-10 leading-[1.1] tracking-tighter uppercase">Expertise <span className="text-panda-green">Premium</span></h2>
+          <span className="text-panda-gold font-display text-xs tracking-[0.6em] uppercase mb-6 block">{t.home.expertiseTitle}</span>
+          <h2 className="text-5xl md:text-8xl font-display mb-10 leading-[1.1] tracking-tighter uppercase">{t.home.expertiseSubtitle.split(' ')[0]} <span className="text-panda-green">{t.home.expertiseSubtitle.split(' ')[1]}</span></h2>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
@@ -106,7 +120,9 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
               <div className="mb-8 text-panda-gold group-hover:scale-125 transition-all duration-500">
                 {item.icon}
               </div>
-              <h4 className="font-display text-base uppercase tracking-widest text-panda-black/80 dark:text-panda-white/80 group-hover:text-panda-gold transition-colors">{item.title}</h4>
+              <h4 className="font-display text-base uppercase tracking-widest text-panda-black/80 dark:text-panda-white/80 group-hover:text-panda-gold transition-colors">
+                {getCategoryLabel(item.category)}
+              </h4>
               <div className="mt-6 w-8 h-[1px] bg-panda-black/10 dark:bg-panda-white/10 group-hover:w-16 group-hover:bg-panda-gold transition-all" />
             </button>
           ))}
@@ -114,7 +130,7 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
         
         <div className="mt-20 text-center">
           <Link to="/services" className="px-12 py-5 border border-panda-black/10 dark:border-panda-white/10 rounded-full hover:border-panda-gold transition-all uppercase tracking-widest text-xs font-bold text-panda-black/70 dark:text-panda-white/50 hover:text-panda-gold">
-            Voir le détail des services
+            {t.home.viewServices}
           </Link>
         </div>
       </section>
@@ -125,12 +141,12 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
           <div>
             <div className="flex items-center space-x-3 mb-4">
               <Zap size={16} className="text-panda-gold animate-pulse" />
-              <span className="text-panda-gold font-display text-xs tracking-[0.5em] uppercase block">Sélection Exclusive</span>
+              <span className="text-panda-gold font-display text-xs tracking-[0.5em] uppercase block">{t.home.portfolioSubtitle}</span>
             </div>
-            <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter leading-none">Dernières <span className="text-panda-gold">Signatures</span></h2>
+            <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter leading-none">{t.home.portfolioTitle.split(' ')[0]} <span className="text-panda-gold">{t.home.portfolioTitle.split(' ')[1]}</span></h2>
           </div>
           <Link to="/portfolio" className="group text-panda-black/60 dark:text-panda-white/40 hover:text-panda-gold transition-colors underline underline-offset-8 uppercase tracking-[0.3em] text-[10px] font-bold flex items-center space-x-3">
-            <span>Explorer la galerie complète</span>
+            <span>{t.home.exploreGallery}</span>
             <ArrowRight size={14} className="group-hover:translate-x-1 transition-transform" />
           </Link>
         </div>
@@ -149,7 +165,7 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-panda-black via-panda-black/20 to-transparent opacity-90" />
               <div className="absolute bottom-0 left-0 p-10 transform translate-y-4 group-hover:translate-y-0 transition-all duration-500 w-full text-panda-white">
-                <span className="text-panda-gold text-[10px] font-bold uppercase tracking-[0.5em] mb-4 block">{project.category}</span>
+                <span className="text-panda-gold text-[10px] font-bold uppercase tracking-[0.5em] mb-4 block">{getCategoryLabel(project.category)}</span>
                 <h3 className="text-3xl font-display mb-3 tracking-tight group-hover:text-panda-gold transition-colors">{project.title[lang]}</h3>
                 <p className="text-panda-white/50 text-sm font-light line-clamp-2 opacity-0 group-hover:opacity-100 transition-all duration-700">{project.description[lang]}</p>
               </div>
@@ -162,13 +178,13 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
       <section className="max-w-7xl mx-auto px-6 reveal">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-20">
           <div className="lg:col-span-4 flex flex-col justify-center">
-            <span className="text-panda-gold font-display text-xs tracking-[0.5em] uppercase mb-6 block">Pensées & Lab</span>
-            <h2 className="text-5xl font-display uppercase tracking-tighter mb-8 leading-tight">L'Atelier <span className="text-panda-green">Blog</span></h2>
+            <span className="text-panda-gold font-display text-xs tracking-[0.5em] uppercase mb-6 block">{t.home.blogSubtitle}</span>
+            <h2 className="text-5xl font-display uppercase tracking-tighter mb-8 leading-tight">{t.home.blogTitle.split(' ')[0]} <span className="text-panda-green">{t.home.blogTitle.split(' ')[1]}</span></h2>
             <p className="text-panda-black/60 dark:text-panda-white/60 text-lg font-light leading-relaxed mb-10">
-              Inspiration, études de cas et coulisses de nos plus grandes collaborations créatives.
+              {t.home.blogDesc}
             </p>
             <Link to="/blog" className="flex items-center space-x-4 text-panda-gold hover:text-panda-black dark:hover:text-white transition-all group">
-              <span className="font-bold uppercase tracking-widest text-sm border-b border-panda-gold/30 pb-1 group-hover:border-panda-black dark:group-hover:border-white">Lire tous les articles</span>
+              <span className="font-bold uppercase tracking-widest text-sm border-b border-panda-gold/30 pb-1 group-hover:border-panda-black dark:group-hover:border-white">{t.home.readArticles}</span>
               <ArrowRight size={18} className="group-hover:translate-x-2 transition-transform" />
             </Link>
           </div>
@@ -207,12 +223,12 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
           <div className="absolute inset-0 bg-white/40 group-hover:bg-panda-gold/10 transition-colors duration-1000" />
           <div className="relative z-10">
             <Mail className="text-panda-green mb-6 md:mb-10 animate-float mx-auto" size={48} />
-            <h2 className="text-4xl md:text-8xl font-display font-bold mb-6 md:mb-10 uppercase tracking-tighter text-panda-black leading-none">Sublimons votre <span className="text-panda-gold">Projet</span></h2>
+            <h2 className="text-4xl md:text-8xl font-display font-bold mb-6 md:mb-10 uppercase tracking-tighter text-panda-black leading-none">{t.home.ctaTitle.split(' ')[0]} <span className="text-panda-gold">{t.home.ctaTitle.split(' ')[1]}</span></h2>
             <p className="text-lg md:text-2xl text-panda-black/80 max-w-2xl mx-auto mb-10 md:mb-16 font-semibold px-4">
-              Propulsez votre marque dans une nouvelle dimension visuelle avec Victor Gabriel Archange.
+              {t.home.ctaDesc}
             </p>
             <div className="inline-flex items-center px-10 md:px-16 py-4 md:py-6 bg-panda-black text-white font-bold uppercase tracking-[0.3em] rounded-xl group-hover:bg-panda-gold group-hover:text-panda-black transition-all shadow-xl text-xs md:text-base">
-              Démarrer le voyage <ArrowRight className="ml-4" />
+              {t.home.ctaButton} <ArrowRight className="ml-4" />
             </div>
           </div>
         </div>

@@ -58,6 +58,7 @@ export interface SocialLinks {
 
 export interface AppSettings {
   socialLinks: SocialLinks;
+  logoTagline: { fr: string; en: string; de: string };
 }
 
 export interface AppState {

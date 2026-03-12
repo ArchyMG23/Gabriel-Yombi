@@ -24,62 +24,62 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
   const serviceList = [
     {
       id: 'Logotype',
-      title: 'Logotype & Monogramme',
+      title: t.services.list.logotype.title,
       icon: <PenTool className="text-panda-gold" size={40} />,
-      description: 'Conception de logos emblématiques, vectorisés et intemporels.',
-      hoverNote: 'Le logo est le point d’ancrage de votre réputation. Nous visons la mémorisation instantanée.',
-      clickMantra: 'Graver votre légende...',
-      items: ['Design sur-sur-mesure', 'Recherche typographique', 'Variantes Noir/Blanc'],
+      description: t.services.list.logotype.desc,
+      hoverNote: t.services.list.logotype.note,
+      clickMantra: t.services.list.logotype.mantra,
+      items: t.services.list.logotype.items,
       delay: '100ms'
     },
     {
       id: 'Branding',
-      title: 'Brand Identity',
+      title: t.services.list.branding.title,
       icon: <Palette className="text-panda-gold" size={40} />,
-      description: 'Création d\'univers visuels cohérents et marbrés.',
-      hoverNote: 'Une identité forte réduit vos coûts d’acquisition. On ne vend pas un produit, mais un statut.',
-      clickMantra: 'Bâtir votre empire...',
-      items: ['Charte Graphique', 'Storytelling visuel', 'Moodboards'],
+      description: t.services.list.branding.desc,
+      hoverNote: t.services.list.branding.note,
+      clickMantra: t.services.list.branding.mantra,
+      items: t.services.list.branding.items,
       delay: '200ms'
     },
     {
       id: 'Social',
-      title: 'Social Media Management',
+      title: t.services.list.social.title,
       icon: <Megaphone className="text-panda-gold" size={40} />,
-      description: 'Direction artistique pour vos réseaux sociaux.',
-      hoverNote: 'L’algorithme aime la qualité. Votre feed doit être une galerie d’art interactive.',
-      clickMantra: 'Illuminer vos réseaux...',
-      items: ['Templates personnalisés', 'Contenus Reels/Stories', 'Stratégie'],
+      description: t.services.list.social.desc,
+      hoverNote: t.services.list.social.note,
+      clickMantra: t.services.list.social.mantra,
+      items: t.services.list.social.items,
       delay: '300ms'
     },
     {
       id: 'Packaging',
-      title: 'Packaging Design',
+      title: t.services.list.packaging.title,
       icon: <Box className="text-panda-gold" size={40} />,
-      description: 'L\'art du déballage de luxe.',
-      hoverNote: 'Le packaging est le premier contact physique. Il doit promettre une expérience hors du commun.',
-      clickMantra: 'Sublimer l’écrin...',
-      items: ['Conception 3D', 'Finitions Or/Argent', 'Eco-luxe'],
+      description: t.services.list.packaging.desc,
+      hoverNote: t.services.list.packaging.note,
+      clickMantra: t.services.list.packaging.mantra,
+      items: t.services.list.packaging.items,
       delay: '400ms'
     },
     {
       id: 'UIUX',
-      title: 'UI/UX Web Design',
+      title: t.services.list.uiux.title,
       icon: <Layout className="text-panda-gold" size={40} />,
-      description: 'Expériences digitales intuitives et esthétiques.',
-      hoverNote: 'Le design Web est une conversation. Nous la rendons fluide, élégante et persuasive.',
-      clickMantra: 'Digitaliser l’élégance...',
-      items: ['Prototypes Figma', 'Mobile-First', 'Interfaces interactives'],
+      description: t.services.list.uiux.desc,
+      hoverNote: t.services.list.uiux.note,
+      clickMantra: t.services.list.uiux.mantra,
+      items: t.services.list.uiux.items,
       delay: '500ms'
     },
     {
       id: 'Creative',
-      title: 'Galerie Créative',
+      title: t.services.list.creative.title,
       icon: <ImageIcon className="text-panda-gold" size={40} />,
-      description: 'Projets artistiques et expérimentations visuelles.',
-      hoverNote: 'Pour sortir des sentiers battus. L’audace créative est le meilleur levier de différenciation.',
-      clickMantra: 'Libérer l’art...',
-      items: ['Illustrations Premium', 'Retouche d\'art', 'Collages'],
+      description: t.services.list.creative.desc,
+      hoverNote: t.services.list.creative.note,
+      clickMantra: t.services.list.creative.mantra,
+      items: t.services.list.creative.items,
       delay: '600ms'
     }
   ];
@@ -116,13 +116,13 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
 
       <header className="mb-24 reveal text-center md:text-left">
         <div className="inline-block bg-panda-gold/10 border border-panda-gold/20 text-panda-gold px-6 py-2 rounded-full mb-6 text-xs font-bold uppercase tracking-[0.4em]">
-          Catalogue d'Expertise
+          {t.services.headerTag}
         </div>
         <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tighter mb-8 uppercase leading-none text-panda-black dark:text-panda-white">
-          Mes <span className="text-panda-gold">Services</span>
+          {t.services.title.split(' ')[0]} <span className="text-panda-gold">{t.services.title.split(' ').slice(1).join(' ')}</span>
         </h1>
         <p className="text-2xl text-panda-black/80 dark:text-panda-white/80 max-w-3xl font-light leading-relaxed">
-          Propulsez votre marque avec Victor Gabriel Archange. Un design audacieux, des détails dorés et une vision sans compromis.
+          {t.services.headerDesc}
         </p>
       </header>
 
@@ -140,12 +140,12 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
             {/* Overlay description au survol */}
             <div className="absolute inset-0 bg-panda-black/90 p-10 opacity-0 group-hover:opacity-100 transition-all duration-500 z-20 flex flex-col justify-center items-center text-center transform translate-y-full group-hover:translate-y-0 backdrop-blur-sm">
               <Sparkles className="text-panda-gold mb-6" size={32} />
-              <h4 className="text-panda-gold text-[10px] font-black uppercase tracking-[0.4em] mb-4">Note d'Expertise</h4>
+              <h4 className="text-panda-gold text-[10px] font-black uppercase tracking-[0.4em] mb-4">{t.services.expertiseNote}</h4>
               <p className="text-panda-white text-sm font-light leading-relaxed max-w-[200px]">
                 "{service.hoverNote}"
               </p>
               <div className="mt-8 flex items-center space-x-2 text-panda-gold text-[10px] font-black uppercase tracking-widest animate-pulse">
-                <span>Cliquer pour réserver</span>
+                <span>{t.services.clickToBook}</span>
                 <ArrowRight size={12} />
               </div>
             </div>
@@ -166,7 +166,7 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
             </p>
             
             <ul className="space-y-3 mt-auto relative z-10">
-              {serviceList[i].items.map((item, j) => (
+              {service.items.map((item, j) => (
                 <li key={j} className="flex items-center space-x-3 text-xs text-panda-black/80 dark:text-panda-white/80">
                   <CheckCircle2 size={14} className="text-panda-green opacity-70" />
                   <span className="tracking-wide">{item}</span>
@@ -189,15 +189,15 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
           <div className="relative z-10 flex flex-col items-center">
             <div className="inline-flex items-center space-x-3 bg-panda-gold/10 px-8 py-3 rounded-full mb-10 border border-panda-gold/20">
               <Zap size={16} className="text-panda-gold animate-pulse" />
-              <span className="text-[11px] font-black uppercase tracking-[0.4em] text-panda-gold">Collaboration d'Exception</span>
+              <span className="text-[11px] font-black uppercase tracking-[0.4em] text-panda-gold">{t.services.collaborationTag}</span>
             </div>
 
             <h2 className="text-5xl md:text-7xl font-display font-bold mb-10 uppercase tracking-tighter text-panda-black dark:text-panda-white leading-none">
-              Prêt à <span className="text-panda-gold">distinguer</span> <br/>votre marque ?
+              {t.services.ctaTitle.split(' ').slice(0, -2).join(' ')} <span className="text-panda-gold">{t.services.ctaTitle.split(' ').slice(-2).join(' ')}</span>
             </h2>
             
             <p className="text-xl md:text-2xl text-panda-black/70 dark:text-panda-white/70 max-w-3xl mx-auto mb-16 font-light leading-relaxed">
-              Ne vous contentez pas d'un simple design. Créons ensemble une <span className="text-panda-black dark:text-panda-white font-bold underline decoration-panda-gold decoration-[4px] underline-offset-[8px]">identité iconique</span> qui impose votre vision.
+              {t.services.ctaDesc}
             </p>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-10">
@@ -206,13 +206,13 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
               >
                 <div className="absolute inset-0 bg-white/20 translate-y-full group-hover/btn:translate-y-0 transition-transform duration-500" />
                 <span className="relative z-10 flex items-center text-sm">
-                  Lancer mon projet <ArrowRight className="ml-4 group-hover/btn:translate-x-2 transition-transform" size={20} />
+                  {t.services.ctaButton} <ArrowRight className="ml-4 group-hover/btn:translate-x-2 transition-transform" size={20} />
                 </span>
               </button>
               
               <button className="flex items-center space-x-4 text-panda-black/60 dark:text-panda-white/60 hover:text-panda-gold transition-colors font-black uppercase tracking-[0.2em] text-[11px] group/link border-b-2 border-panda-black/5 dark:border-white/5 pb-2 hover:border-panda-gold">
                 <MessageSquare size={18} className="group-hover/link:rotate-12 transition-transform" />
-                <span>Poser une question</span>
+                <span>{t.services.askQuestion}</span>
               </button>
             </div>
           </div>

@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation, Link } from 'react-router-dom';
 import { Project, ProjectCategory, Language } from '../types';
-import { CATEGORIES } from '../constants';
+import { CATEGORIES, TRANSLATIONS } from '../constants';
 import { Film, Image as ImageIcon, X, ArrowRight, Zap, Info, Search } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 
@@ -16,6 +16,8 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
   const [activeCategory, setActiveCategory] = useState<ProjectCategory>(ProjectCategory.ALL);
   const [selectedProject, setSelectedProject] = useState<Project | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
+
+  const t = TRANSLATIONS[lang];
 
   // Gérer le filtre passé depuis l'accueil
   useEffect(() => {
@@ -33,10 +35,24 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
     return matchesCategory && matchesSearch;
   });
 
+  const getCategoryLabel = (cat: ProjectCategory) => {
+    const categories = t.portfolio.categories;
+    switch (cat) {
+      case ProjectCategory.ALL: return categories.all;
+      case ProjectCategory.GALLERY: return categories.gallery;
+      case ProjectCategory.LOGOTYPE: return categories.logotype;
+      case ProjectCategory.BRANDING: return categories.branding;
+      case ProjectCategory.SOCIAL: return categories.social;
+      case ProjectCategory.PACKAGING: return categories.packaging;
+      case ProjectCategory.UIUX: return categories.uiux;
+      default: return cat;
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-20">
       <header className="mb-20 text-center reveal">
-        <span className="text-panda-gold font-display text-sm tracking-widest uppercase mb-4 block">Galerie de Réalisations</span>
+        <span className="text-panda-gold font-display text-sm tracking-widest uppercase mb-4 block">{t.portfolio.title}</span>
         <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tighter mb-12 uppercase text-panda-black dark:text-panda-white">PORTFOLIO</h1>
         
         {/* Search Bar */}
@@ -44,7 +60,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
           <Search className="absolute left-8 top-1/2 -translate-y-1/2 text-panda-black/50 dark:text-panda-white/30 group-focus-within:text-panda-gold transition-colors" size={20} />
           <input 
             type="text"
-            placeholder="Rechercher un projet..."
+            placeholder={t.portfolio.searchPlaceholder}
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             className="w-full bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 rounded-2xl py-5 pl-14 pr-6 outline-none focus:border-panda-gold transition-all text-panda-black dark:text-panda-white placeholder:text-panda-black/40 dark:placeholder:text-panda-white/20"
@@ -64,7 +80,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
                   : 'border-panda-black/10 dark:border-panda-white/10 hover:border-panda-gold text-panda-black/60 dark:text-panda-white/60'
                 }`}
               >
-                {cat}
+                {getCategoryLabel(cat as ProjectCategory)}
               </button>
             ))}
           </div>
@@ -115,11 +131,11 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
                 </div>
               </div>
               <div className="p-10">
-                <span className="text-panda-gold text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">{project.category}</span>
+                <span className="text-panda-gold text-[10px] font-black uppercase tracking-[0.3em] mb-4 block">{getCategoryLabel(project.category)}</span>
                 <h3 className="text-3xl font-display mb-4 group-hover:text-panda-gold transition-colors tracking-tight text-panda-black dark:text-panda-white">{project.title[lang]}</h3>
                 <p className="text-panda-black/70 dark:text-panda-white/50 text-sm leading-relaxed mb-8 font-light line-clamp-3">{project.description[lang]}</p>
                 <button className="text-[10px] uppercase font-black tracking-widest border-b-2 border-panda-gold/30 pb-1 hover:border-panda-gold transition-all text-panda-black dark:text-panda-white group-hover:text-panda-gold flex items-center space-x-2">
-                  <span>Explorer l'étude de cas</span>
+                  <span>{t.portfolio.exploreCaseStudy}</span>
                   <ArrowRight size={12} />
                 </button>
               </div>
@@ -130,7 +146,7 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
       
       {filteredProjects.length === 0 && (
         <div className="text-center py-40 opacity-30 italic font-light tracking-widest text-panda-black dark:text-panda-white">
-          L'atelier prépare de nouveaux chefs-d'œuvre pour cette catégorie.
+          {t.portfolio.noResults}
         </div>
       )}
 
@@ -167,21 +183,21 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
               )}
               <div className="absolute bottom-8 left-8">
                  <div className="bg-panda-gold text-panda-black px-6 py-2 rounded-full text-xs font-black uppercase tracking-widest shadow-xl">
-                    {selectedProject.category}
+                    {getCategoryLabel(selectedProject.category)}
                  </div>
               </div>
             </div>
 
             {/* Right: Content */}
             <div className="w-full lg:w-1/2 p-12 md:p-20 overflow-y-auto custom-scrollbar">
-              <span className="text-panda-gold font-display text-xs tracking-[0.5em] uppercase mb-6 block">Étude de Cas</span>
+              <span className="text-panda-gold font-display text-xs tracking-[0.5em] uppercase mb-6 block">{t.portfolio.caseStudyTitle}</span>
               <h2 className="text-4xl md:text-6xl font-display font-bold mb-10 uppercase tracking-tighter leading-none text-panda-black dark:text-panda-white">{selectedProject.title[lang]}</h2>
               
               <div className="space-y-12">
                 <div>
                   <h4 className="text-panda-black/60 dark:text-panda-white/40 text-[10px] uppercase font-black tracking-widest mb-4 flex items-center space-x-2">
                     <Zap size={14} className="text-panda-gold" />
-                    <span>Description</span>
+                    <span>{t.portfolio.description}</span>
                   </h4>
                   <p className="text-xl text-panda-black/80 dark:text-panda-white/80 font-light leading-relaxed">
                     {selectedProject.description[lang]}
@@ -189,25 +205,23 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
                 </div>
 
                 <div className="p-10 rounded-[2rem] marble-texture border border-panda-black/5 dark:border-panda-white/5 shadow-inner bg-panda-black/5 dark:bg-panda-white/5">
-                  <h4 className="text-panda-black/60 dark:text-panda-white/40 text-[10px] uppercase font-black tracking-widest mb-6">Processus Créatif</h4>
+                  <h4 className="text-panda-black/60 dark:text-panda-white/40 text-[10px] uppercase font-black tracking-widest mb-6">{t.portfolio.process}</h4>
                   <div className="text-panda-black dark:text-panda-white text-lg leading-relaxed space-y-4 whitespace-pre-line font-medium">
                     {selectedProject.caseStudy[lang]}
                   </div>
                 </div>
 
                 <div className="pt-10 border-t border-panda-black/10 dark:border-panda-white/10">
-                  <button 
-                    onClick={() => {
-                      setSelectedProject(null);
-                      // On pourrait naviguer vers contact ici si besoin
-                    }}
+                  <Link 
+                    to="/contact"
+                    onClick={() => setSelectedProject(null)}
                     className="flex items-center space-x-4 group"
                   >
                     <div className="w-12 h-12 bg-panda-gold text-panda-black rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
                       <ArrowRight size={20} />
                     </div>
-                    <span className="text-sm font-bold uppercase tracking-widest text-panda-black dark:text-panda-white group-hover:text-panda-gold transition-colors">Démarrer un projet similaire</span>
-                  </button>
+                    <span className="text-sm font-bold uppercase tracking-widest text-panda-black dark:text-panda-white group-hover:text-panda-gold transition-colors">{t.portfolio.startSimilar}</span>
+                  </Link>
                 </div>
               </div>
             </div>

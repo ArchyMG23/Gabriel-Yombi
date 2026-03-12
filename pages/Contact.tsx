@@ -76,11 +76,11 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (formData.services.length === 0) {
-      alert("Veuillez sélectionner au moins un service.");
+      alert(t.booking.alertService);
       return;
     }
     if (!formData.date || !formData.time) {
-      alert("Veuillez choisir une date et une heure dans le calendrier.");
+      alert(t.booking.alertDateTime);
       return;
     }
     onAddAppointment({
@@ -147,6 +147,25 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
       .map(a => a.time);
   };
 
+  const handleSubscribe = async () => {
+    if (!newsEmail) return;
+    try {
+      const response = await fetch('/api/subscribe', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: newsEmail }),
+      });
+      if (response.ok) {
+        alert(t.booking.thanksSubscribe);
+        setNewsEmail('');
+      }
+    } catch (error) {
+      console.error('Error subscribing:', error);
+    }
+  };
+
   return (
     <div className="max-w-7xl mx-auto px-6 py-20 relative z-10">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-16 items-start">
@@ -155,26 +174,25 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
         <div className="lg:col-span-5 space-y-12">
           <header className="reveal">
             <div className="inline-block bg-panda-gold/10 border border-panda-gold/20 text-panda-gold px-4 py-1 rounded-full mb-6 text-[10px] font-black uppercase tracking-widest">
-              Contact & Booking
+              {t.booking.headerTag}
             </div>
             <h1 className="text-5xl md:text-7xl font-display font-bold uppercase tracking-tighter mb-6 md:mb-8 leading-none text-panda-black dark:text-panda-white">
-              Entrons en <span className="text-panda-gold">Scène</span>
+              {t.booking.headerTitle.split(' ').slice(0, -1).join(' ')} <span className="text-panda-gold">{t.booking.headerTitle.split(' ').slice(-1)}</span>
             </h1>
             <p className="text-lg md:text-xl text-panda-black/70 dark:text-panda-white/60 font-light leading-relaxed">
-              Victor Gabriel Archange traite chaque demande avec la même exigence de prestige. 
-              Réservez votre créneau pour une consultation stratégique.
+              {t.booking.headerDesc}
             </p>
           </header>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-8 reveal">
             <div className="p-8 bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 rounded-3xl group hover:border-panda-gold transition-all">
               <MapPin className="text-panda-gold mb-4 group-hover:scale-110 transition-transform" />
-              <h4 className="text-xs font-black uppercase tracking-widest text-panda-black/60 dark:text-panda-white/40 mb-2">Studio</h4>
+              <h4 className="text-xs font-black uppercase tracking-widest text-panda-black/60 dark:text-panda-white/40 mb-2">{t.booking.studio}</h4>
               <p className="text-sm font-medium text-panda-black dark:text-panda-white">Paris / Remote</p>
             </div>
             <div className="p-8 bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 rounded-3xl group hover:border-panda-gold transition-all">
               <Phone className="text-panda-gold mb-4 group-hover:scale-110 transition-transform" />
-              <h4 className="text-xs font-black uppercase tracking-widest text-panda-black/60 dark:text-panda-white/40 mb-2">WhatsApp</h4>
+              <h4 className="text-xs font-black uppercase tracking-widest text-panda-black/60 dark:text-panda-white/40 mb-2">{t.booking.whatsapp}</h4>
               <p className="text-sm font-medium text-panda-black dark:text-panda-white">{settings.socialLinks.whatsapp}</p>
             </div>
           </div>
@@ -190,7 +208,10 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
                 value={newsEmail}
                 onChange={(e) => setNewsEmail(e.target.value)}
               />
-              <button className="w-full bg-panda-gold text-panda-black py-4 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-panda-gold/90 transition-all shadow-xl shadow-panda-gold/5">
+              <button 
+                onClick={handleSubscribe}
+                className="w-full bg-panda-gold text-panda-black py-4 rounded-xl font-bold uppercase text-[10px] tracking-widest hover:bg-panda-gold/90 transition-all shadow-xl shadow-panda-gold/5"
+              >
                 {t.newsletter.submit}
               </button>
             </div>
@@ -206,15 +227,15 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
               <div className="w-24 h-24 bg-panda-green/20 rounded-full flex items-center justify-center text-panda-green mb-8 border border-panda-green/30">
                 <CheckCircle size={48} />
               </div>
-              <h3 className="text-4xl font-display font-bold mb-4 uppercase tracking-tighter text-panda-black dark:text-panda-white">C'est Partit !</h3>
+              <h3 className="text-4xl font-display font-bold mb-4 uppercase tracking-tighter text-panda-black dark:text-panda-white">{t.booking.successTitle}</h3>
               <p className="text-panda-black/60 dark:text-panda-white/60 text-lg max-w-sm mx-auto font-light leading-relaxed">
-                Votre demande est bien arrivée dans l'atelier de Victor. Nous reviendrons vers vous sous 24h.
+                {t.booking.successDesc}
               </p>
               <button 
                 onClick={() => setSubmitted(false)}
                 className="mt-12 text-panda-gold font-black uppercase tracking-widest text-[10px] hover:underline"
               >
-                Envoyer une autre demande
+                {t.booking.anotherRequest}
               </button>
             </div>
           ) : (
@@ -222,21 +243,21 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
               {/* identity Section */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 <div className="space-y-3">
-                  <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">Identité</label>
+                  <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">{t.booking.identity}</label>
                   <input 
                     required
-                    placeholder="Votre nom complet"
+                    placeholder={t.booking.placeholderName}
                     className="w-full bg-panda-black/5 dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 px-6 py-5 rounded-2xl focus:border-panda-gold outline-none transition-all placeholder:text-panda-black/40 dark:placeholder:text-white/10 text-panda-black dark:text-panda-white"
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                   />
                 </div>
                 <div className="space-y-3">
-                  <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">Email Business</label>
+                  <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">{t.booking.businessEmail}</label>
                   <input 
                     type="email" 
                     required
-                    placeholder="nom@entreprise.com"
+                    placeholder={t.booking.placeholderEmail}
                     className="w-full bg-panda-black/5 dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 px-6 py-5 rounded-2xl focus:border-panda-gold outline-none transition-all placeholder:text-panda-black/40 dark:placeholder:text-white/10 text-panda-black dark:text-panda-white"
                     value={formData.email}
                     onChange={(e) => setFormData({...formData, email: e.target.value})}
@@ -246,10 +267,10 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
 
               {/* Description Section */}
               <div className="space-y-3">
-                <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">Description de votre besoin</label>
+                <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">{t.booking.needDesc}</label>
                 <textarea 
                   required
-                  placeholder="Expliquez-nous brièvement votre projet..."
+                  placeholder={t.booking.placeholderDesc}
                   className="w-full bg-panda-black/5 dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 px-6 py-5 rounded-2xl focus:border-panda-gold outline-none transition-all placeholder:text-panda-black/40 dark:placeholder:text-white/10 h-32 text-panda-black dark:text-panda-white"
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
@@ -258,7 +279,7 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
 
               {/* Service Selection Chips */}
               <div className="space-y-6">
-                <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">Services requis</label>
+                <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">{t.booking.requiredServices}</label>
                 <div className="flex flex-wrap gap-3">
                   {AVAILABLE_SERVICES.map((s) => (
                     <button
@@ -286,7 +307,7 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
               <div className="space-y-6">
                 <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2 flex items-center space-x-2">
                   <CalendarIcon size={14} />
-                  <span>Choisir une date de rendez-vous</span>
+                  <span>{t.booking.chooseDate}</span>
                 </label>
                 
                 <div className="bg-panda-black/5 dark:bg-panda-black/40 border border-panda-black/10 dark:border-panda-white/10 rounded-3xl p-4 md:p-8">
@@ -347,12 +368,12 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
                 {formData.date && (
                   <div className="space-y-6 animate-in slide-in-from-top-2">
                     <div className="bg-panda-gold/10 border border-panda-gold/30 p-4 rounded-xl flex items-center justify-between">
-                      <span className="text-[10px] font-black uppercase tracking-widest text-panda-gold">Date sélectionnée :</span>
+                      <span className="text-[10px] font-black uppercase tracking-widest text-panda-gold">{t.booking.selectedDate}</span>
                       <span className="text-sm font-bold text-panda-black dark:text-panda-white">{new Date(formData.date).toLocaleDateString(lang === 'fr' ? 'fr-FR' : 'en-US', { dateStyle: 'full' })}</span>
                     </div>
 
                     <div className="space-y-3">
-                      <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">Choisir un créneau horaire</label>
+                      <label className="text-[10px] uppercase tracking-[0.3em] font-black text-panda-black/60 dark:text-panda-white/40 ml-2">{t.booking.chooseTime}</label>
                       <div className="grid grid-cols-4 gap-3">
                         {TIME_SLOTS.map(slot => {
                           const isBusy = getBusySlotsForDate(formData.date).includes(slot);
@@ -386,7 +407,7 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
                 type="submit"
                 className="w-full py-6 bg-panda-gold text-panda-black font-black uppercase tracking-[0.4em] rounded-2xl hover:bg-panda-gold/90 transition-all transform hover:scale-[1.01] active:scale-[0.98] shadow-2xl shadow-panda-gold/20 flex items-center justify-center space-x-4 group"
               >
-                <span>Finaliser la réservation</span>
+                <span>{t.booking.finalize}</span>
                 <Send size={18} className="group-hover:translate-x-2 transition-transform" />
               </button>
             </form>
