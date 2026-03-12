@@ -44,12 +44,25 @@ export interface Appointment {
   name: string;
   email: string;
   date: string;
-  services: string[]; // Changed from single string to array
-  status: 'pending' | 'confirmed';
+  time?: string; // Added time
+  description?: string; // Added description
+  services: string[];
+  status: 'pending' | 'confirmed' | 'cancelled'; // Added cancelled
+}
+
+export interface SocialLinks {
+  facebook: string;
+  instagram: string;
+  whatsapp: string;
+}
+
+export interface AppSettings {
+  socialLinks: SocialLinks;
 }
 
 export interface AppState {
   projects: Project[];
   posts: BlogPost[];
   appointments: Appointment[];
+  settings: AppSettings;
 }

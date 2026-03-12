@@ -118,10 +118,10 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
         <div className="inline-block bg-panda-gold/10 border border-panda-gold/20 text-panda-gold px-6 py-2 rounded-full mb-6 text-xs font-bold uppercase tracking-[0.4em]">
           Catalogue d'Expertise
         </div>
-        <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tighter mb-8 uppercase leading-none">
+        <h1 className="text-6xl md:text-8xl font-display font-bold tracking-tighter mb-8 uppercase leading-none text-panda-black dark:text-panda-white">
           Mes <span className="text-panda-gold">Services</span>
         </h1>
-        <p className="text-2xl text-panda-white/80 max-w-3xl font-light leading-relaxed">
+        <p className="text-2xl text-panda-black/80 dark:text-panda-white/80 max-w-3xl font-light leading-relaxed">
           Propulsez votre marque avec Victor Gabriel Archange. Un design audacieux, des détails dorés et une vision sans compromis.
         </p>
       </header>
@@ -131,7 +131,7 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
           <div 
             key={i} 
             onClick={(e) => handleServiceClick(e, service.id, service.clickMantra)}
-            className="reveal p-10 bg-panda-white/5 border border-panda-white/10 rounded-[2.5rem] group hover:bg-panda-white/10 hover:border-panda-gold transition-all duration-700 relative overflow-hidden h-full flex flex-col cursor-pointer"
+            className="reveal p-10 bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 rounded-[2.5rem] group hover:bg-panda-black/10 dark:hover:bg-panda-white/10 hover:border-panda-gold transition-all duration-700 relative overflow-hidden h-full flex flex-col cursor-pointer"
             style={{ transitionDelay: service.delay }}
           >
             {/* Texture de marbre subtile en arrière-plan */}
@@ -156,18 +156,18 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
               </div>
             </div>
             
-            <h3 className="text-xl font-display mb-4 uppercase tracking-tight group-hover:text-panda-gold transition-colors flex items-center justify-between">
+            <h3 className="text-xl font-display mb-4 uppercase tracking-tight group-hover:text-panda-gold transition-colors flex items-center justify-between text-panda-black dark:text-panda-white">
               <span>{service.title}</span>
               <ArrowUpRight size={18} className="opacity-0 group-hover:opacity-100 transition-all" />
             </h3>
 
-            <p className="text-panda-white/70 mb-8 font-light text-sm leading-relaxed">
+            <p className="text-panda-black/70 dark:text-panda-white/70 mb-8 font-light text-sm leading-relaxed">
               {service.description}
             </p>
             
             <ul className="space-y-3 mt-auto relative z-10">
-              {service.items.map((item, j) => (
-                <li key={j} className="flex items-center space-x-3 text-xs text-panda-white/80">
+              {serviceList[i].items.map((item, j) => (
+                <li key={j} className="flex items-center space-x-3 text-xs text-panda-black/80 dark:text-panda-white/80">
                   <CheckCircle2 size={14} className="text-panda-green opacity-70" />
                   <span className="tracking-wide">{item}</span>
                 </li>
@@ -180,7 +180,7 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
       <section className="reveal relative group px-4">
         <div 
           onClick={() => navigate('/contact')}
-          className="max-w-5xl mx-auto p-12 md:p-24 rounded-[4rem] text-center relative overflow-hidden cursor-pointer border border-panda-white/10 shadow-2xl transition-all duration-500 bg-panda-black group-hover:border-panda-gold/50"
+          className="max-w-5xl mx-auto p-12 md:p-24 rounded-[4rem] text-center relative overflow-hidden cursor-pointer border border-panda-black/10 dark:border-panda-white/10 shadow-2xl transition-all duration-500 bg-white dark:bg-panda-black group-hover:border-panda-gold/50"
         >
           <div className="absolute top-0 left-0 w-full h-full bg-[radial-gradient(circle_at_center,_rgba(212,175,55,0.05)_0%,_transparent_70%)] pointer-events-none" />
           <div className="absolute -top-32 -left-32 w-64 h-64 bg-panda-gold/10 blur-[80px] rounded-full group-hover:translate-x-10 transition-transform duration-1000" />
@@ -192,12 +192,12 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
               <span className="text-[11px] font-black uppercase tracking-[0.4em] text-panda-gold">Collaboration d'Exception</span>
             </div>
 
-            <h2 className="text-5xl md:text-7xl font-display font-bold mb-10 uppercase tracking-tighter text-panda-white leading-none">
+            <h2 className="text-5xl md:text-7xl font-display font-bold mb-10 uppercase tracking-tighter text-panda-black dark:text-panda-white leading-none">
               Prêt à <span className="text-panda-gold">distinguer</span> <br/>votre marque ?
             </h2>
             
-            <p className="text-xl md:text-2xl text-panda-white/70 max-w-3xl mx-auto mb-16 font-light leading-relaxed">
-              Ne vous contentez pas d'un simple design. Créons ensemble une <span className="text-panda-white font-bold underline decoration-panda-gold decoration-[4px] underline-offset-[8px]">identité iconique</span> qui impose votre vision.
+            <p className="text-xl md:text-2xl text-panda-black/70 dark:text-panda-white/70 max-w-3xl mx-auto mb-16 font-light leading-relaxed">
+              Ne vous contentez pas d'un simple design. Créons ensemble une <span className="text-panda-black dark:text-panda-white font-bold underline decoration-panda-gold decoration-[4px] underline-offset-[8px]">identité iconique</span> qui impose votre vision.
             </p>
 
             <div className="flex flex-col md:flex-row items-center justify-center gap-10">
@@ -210,17 +210,17 @@ const Services: React.FC<{ lang: Language }> = ({ lang }) => {
                 </span>
               </button>
               
-              <button className="flex items-center space-x-4 text-panda-white/60 hover:text-panda-gold transition-colors font-black uppercase tracking-[0.2em] text-[11px] group/link border-b-2 border-white/5 pb-2 hover:border-panda-gold">
+              <button className="flex items-center space-x-4 text-panda-black/60 dark:text-panda-white/60 hover:text-panda-gold transition-colors font-black uppercase tracking-[0.2em] text-[11px] group/link border-b-2 border-panda-black/5 dark:border-white/5 pb-2 hover:border-panda-gold">
                 <MessageSquare size={18} className="group-hover/link:rotate-12 transition-transform" />
                 <span>Poser une question</span>
               </button>
             </div>
           </div>
 
-          <div className="hidden lg:block absolute top-20 right-20 text-panda-white/5 animate-float">
+          <div className="hidden lg:block absolute top-20 right-20 text-panda-black/5 dark:text-panda-white/5 animate-float">
             <Sparkles size={100} />
           </div>
-          <div className="hidden lg:block absolute bottom-20 left-20 text-panda-white/5 animate-float-delayed">
+          <div className="hidden lg:block absolute bottom-20 left-20 text-panda-black/5 dark:text-panda-white/5 animate-float-delayed">
             <Palette size={100} />
           </div>
         </div>

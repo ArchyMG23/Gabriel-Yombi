@@ -7,8 +7,9 @@ import {
   Palette, Box, Layout, MousePointer2, Megaphone, Image as ImageIcon
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Language, Project, BlogPost, Appointment, ProjectCategory } from './types';
+import { Language, Project, BlogPost, Appointment, ProjectCategory, AppSettings } from './types';
 import { TRANSLATIONS, INITIAL_PROJECTS, INITIAL_POSTS, CATEGORIES } from './constants';
+import { Sun, Moon } from 'lucide-react';
 import Home from './pages/Home';
 import Portfolio from './pages/Portfolio';
 import Services from './pages/Services';
@@ -31,7 +32,7 @@ const NavLinks: React.FC<{ lang: Language; t: any; setIsMenuOpen: (o: boolean) =
             key={key} 
             to={path}
             className={`relative text-[10px] font-black uppercase tracking-[0.3em] transition-all duration-500 py-2 ${
-              isActive ? 'text-panda-gold' : 'text-panda-white/40 hover:text-panda-white'
+              isActive ? 'text-panda-gold' : 'text-panda-black/40 dark:text-panda-white/40 hover:text-panda-black dark:hover:text-panda-white'
             }`}
             onClick={() => setIsMenuOpen(false)}
           >
@@ -59,12 +60,30 @@ const NavLinks: React.FC<{ lang: Language; t: any; setIsMenuOpen: (o: boolean) =
 
 const App: React.FC = () => {
   const [lang, setLang] = useState<Language>('fr');
+  const [theme, setTheme] = useState<'light' | 'dark'>('dark');
   const [projects, setProjects] = useState<Project[]>(INITIAL_PROJECTS);
   const [posts, setPosts] = useState<BlogPost[]>(INITIAL_POSTS);
   const [appointments, setAppointments] = useState<Appointment[]>([]);
+  const [settings, setSettings] = useState<AppSettings>({
+    socialLinks: {
+      facebook: 'https://facebook.com/panda_graphic',
+      instagram: 'https://instagram.com/panda_graphic',
+      whatsapp: '654491319'
+    }
+  });
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isAdmin, setIsAdmin] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const savedTheme = localStorage.getItem('theme') as 'light' | 'dark';
+    if (savedTheme) setTheme(savedTheme);
+  }, []);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', theme === 'dark');
+    localStorage.setItem('theme', theme);
+  }, [theme]);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -85,7 +104,42 @@ const App: React.FC = () => {
     setPosts(posts.map(p => p.id === updatedPost.id ? updatedPost : p));
   };
 
-  const addAppointment = (a: Appointment) => setAppointments([...appointments, a]);
+  const addAppointment = async (a: Appointment) => {
+    setAppointments([...appointments, a]);
+    
+    try {
+      const response = await fetch('/api/appointments', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(a),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to send email notification');
+      }
+
+      const result = await response.json();
+      console.log('Notification status:', result.message);
+    } catch (error) {
+      console.error('Error sending notification:', error);
+    }
+  };
+
+  const updateAppointment = (updated: Appointment) => {
+    setAppointments(appointments.map(a => a.id === updated.id ? updated : a));
+    // Logic for email notification on update
+    console.log(`Update notification sent to ${updated.email}`);
+  };
+
+  const deleteAppointment = (id: string) => {
+    setAppointments(appointments.filter(a => a.id !== id));
+  };
+
+  const updateSettings = (newSettings: AppSettings) => setSettings(newSettings);
+
+  const toggleTheme = () => setTheme(prev => prev === 'dark' ? 'light' : 'dark');
 
   const toggleLang = () => {
     setLang(prev => prev === 'fr' ? 'en' : prev === 'en' ? 'de' : 'fr');
@@ -93,7 +147,9 @@ const App: React.FC = () => {
 
   return (
     <Router>
-      <div className="min-h-screen font-sans text-panda-white selection:bg-panda-gold selection:text-panda-black">
+      <div className={`min-h-screen font-sans transition-colors duration-500 selection:bg-panda-gold selection:text-panda-black ${
+        theme === 'dark' ? 'bg-panda-black text-panda-white' : 'bg-white text-panda-black'
+      }`}>
         {/* Navigation */}
         <motion.nav 
           initial={{ y: -100 }}
@@ -101,30 +157,39 @@ const App: React.FC = () => {
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className={`fixed top-0 w-full z-50 transition-all duration-700 ${
             scrolled 
-              ? 'py-4 bg-panda-black/60 backdrop-blur-2xl border-b border-panda-white/5 shadow-2xl' 
+              ? 'py-4 bg-white/60 dark:bg-panda-black/60 backdrop-blur-2xl border-b border-panda-black/5 dark:border-panda-white/5 shadow-2xl' 
               : 'py-8 bg-transparent'
           }`}
         >
           <div className="max-w-7xl mx-auto px-6 flex items-center justify-between">
             <Link to="/" className="flex items-center space-x-2 group">
               <div className="w-10 h-10 bg-panda-gold rounded-full flex items-center justify-center text-panda-black font-black text-xl group-hover:rotate-[360deg] transition-transform duration-1000">P</div>
-              <span className="font-display text-xl font-bold tracking-tighter text-panda-white group-hover:text-panda-gold transition-colors">PANDA<span className="text-panda-gold">_</span>GRAPHIC</span>
+              <span className="font-display text-xl font-bold tracking-tighter text-panda-black dark:text-panda-white group-hover:text-panda-gold transition-colors">PANDA<span className="text-panda-gold">_</span>GRAPHIC</span>
             </Link>
 
             <div className="hidden md:flex items-center space-x-10">
               <NavLinks lang={lang} t={t} setIsMenuOpen={setIsMenuOpen} />
               
-              <button 
-                onClick={toggleLang} 
-                className="flex items-center space-x-2 text-[10px] font-black bg-panda-white/5 px-4 py-2 rounded-full border border-panda-white/10 hover:border-panda-gold hover:bg-panda-gold/10 transition-all uppercase tracking-widest"
-              >
-                <Globe size={12} className="text-panda-gold" />
-                <span>{lang.toUpperCase()}</span>
-              </button>
+              <div className="flex items-center space-x-4">
+                <button 
+                  onClick={toggleTheme}
+                  className="p-2 bg-panda-black/5 dark:bg-panda-white/5 rounded-full border border-panda-black/10 dark:border-panda-white/10 hover:border-panda-gold transition-all text-panda-black dark:text-panda-white"
+                >
+                  {theme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+                </button>
+
+                <button 
+                  onClick={toggleLang} 
+                  className="flex items-center space-x-2 text-[10px] font-black bg-panda-black/5 dark:bg-panda-white/5 px-4 py-2 rounded-full border border-panda-black/10 dark:border-panda-white/10 hover:border-panda-gold hover:bg-panda-gold/10 transition-all uppercase tracking-widest text-panda-black dark:text-panda-white"
+                >
+                  <Globe size={12} className="text-panda-gold" />
+                  <span>{lang.toUpperCase()}</span>
+                </button>
+              </div>
             </div>
 
             <button 
-              className={`md:hidden p-3 rounded-full transition-all ${scrolled ? 'bg-panda-white/5' : 'bg-transparent'}`} 
+              className={`md:hidden p-3 rounded-full transition-all text-panda-black dark:text-panda-white ${scrolled ? 'bg-panda-black/5 dark:bg-panda-white/5' : 'bg-transparent'}`} 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
             >
               {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
@@ -183,7 +248,7 @@ const App: React.FC = () => {
             <Route path="/services" element={<Services lang={lang} />} />
             <Route path="/about" element={<About lang={lang} />} />
             <Route path="/blog" element={<Blog lang={lang} posts={posts} onUpdatePost={updatePost} isAdmin={isAdmin} />} />
-            <Route path="/contact" element={<Contact lang={lang} onAddAppointment={addAppointment} />} />
+            <Route path="/contact" element={<Contact lang={lang} onAddAppointment={addAppointment} appointments={appointments} settings={settings} />} />
             <Route path="/admin" element={
               <Admin 
                 lang={lang} 
@@ -194,6 +259,10 @@ const App: React.FC = () => {
                 onAddPost={addPost}
                 onDeletePost={deletePost}
                 appointments={appointments}
+                onUpdateAppointment={updateAppointment}
+                onDeleteAppointment={deleteAppointment}
+                settings={settings}
+                onUpdateSettings={updateSettings}
                 isAdmin={isAdmin}
                 setIsAdmin={setIsAdmin}
               />
@@ -202,17 +271,17 @@ const App: React.FC = () => {
         </main>
 
         {/* Footer */}
-        <footer className="bg-panda-black/40 backdrop-blur-sm border-t border-panda-white/10 py-12 px-6">
+        <footer className="bg-panda-black/5 dark:bg-panda-black/40 backdrop-blur-sm border-t border-panda-black/10 dark:border-panda-white/10 py-12 px-6">
           <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-12">
             <div>
               <h3 className="font-display text-xl mb-4 text-panda-gold">PANDA_GRAPHIC</h3>
-              <p className="text-panda-white/60 max-w-xs">{t.about.bio}</p>
+              <p className="text-panda-black/60 dark:text-panda-white/60 max-w-xs">{t.about.bio}</p>
             </div>
             <div className="space-y-4">
               <h4 className="font-bold text-panda-gold uppercase tracking-widest text-sm">Quick Links</h4>
-              <ul className="grid grid-cols-2 gap-2 text-sm text-panda-white/70">
+              <ul className="grid grid-cols-2 gap-2 text-sm text-panda-black/70 dark:text-panda-white/70">
                 {Object.entries(t.nav).map(([key, label]) => (
-                  <li key={key}><Link to={key === 'home' ? '/' : `/${key}`} className="hover:text-panda-gold">{label}</Link></li>
+                  <li key={key}><Link to={key === 'home' ? '/' : `/${key}`} className="hover:text-panda-gold text-panda-black/70 dark:text-panda-white/70">{label}</Link></li>
                 ))}
               </ul>
             </div>
@@ -220,32 +289,32 @@ const App: React.FC = () => {
               <h4 className="font-bold text-panda-gold uppercase tracking-widest text-sm">Connect</h4>
               <div className="flex space-x-4">
                 <a 
-                  href="https://facebook.com/panda_graphic" 
+                  href={settings.socialLinks.facebook} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="p-2 bg-panda-white/5 rounded-full hover:bg-panda-gold hover:text-panda-black transition-all"
+                  className="p-2 bg-panda-black/5 dark:bg-panda-white/5 rounded-full hover:bg-panda-gold hover:text-panda-black transition-all text-panda-black dark:text-panda-white"
                 >
                   <Facebook size={20} />
                 </a>
                 <a 
-                  href="https://instagram.com/panda_graphic" 
+                  href={settings.socialLinks.instagram} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="p-2 bg-panda-white/5 rounded-full hover:bg-panda-gold hover:text-panda-black transition-all"
+                  className="p-2 bg-panda-black/5 dark:bg-panda-white/5 rounded-full hover:bg-panda-gold hover:text-panda-black transition-all text-panda-black dark:text-panda-white"
                 >
                   <Instagram size={20} />
                 </a>
                 <a 
-                  href="https://linkedin.com/in/victor-gabriel-archange" 
+                  href={`https://wa.me/${settings.socialLinks.whatsapp}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="p-2 bg-panda-white/5 rounded-full hover:bg-panda-gold hover:text-panda-black transition-all"
+                  className="p-2 bg-panda-black/5 dark:bg-panda-white/5 rounded-full hover:bg-panda-gold hover:text-panda-black transition-all text-panda-black dark:text-panda-white"
                 >
-                  <Linkedin size={20} />
+                  <Send size={20} />
                 </a>
               </div>
-              <div className="pt-6 border-t border-panda-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
-                <Link to="/admin" className="text-[10px] text-panda-white/30 uppercase tracking-widest hover:text-panda-gold transition-colors">
+              <div className="pt-6 border-t border-panda-black/5 dark:border-panda-white/5 flex flex-col md:flex-row justify-between items-center gap-4">
+                <Link to="/admin" className="text-[10px] text-panda-black/30 dark:text-panda-white/30 uppercase tracking-widest hover:text-panda-gold transition-colors">
                   © 2024 Victor Gabriel Archange Yombi Mangamba
                 </Link>
               </div>
