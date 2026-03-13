@@ -6,6 +6,7 @@ import cors from "cors";
 import fs from "fs";
 
 const SUBSCRIBERS_FILE = path.join(process.cwd(), "subscribers.json");
+const APPOINTMENTS_FILE = path.join(process.cwd(), "appointments.json");
 
 // Helper to get subscribers
 function getSubscribers(): string[] {
@@ -23,6 +24,22 @@ function saveSubscribers(subscribers: string[]) {
   fs.writeFileSync(SUBSCRIBERS_FILE, JSON.stringify(subscribers, null, 2));
 }
 
+// Helper to get appointments
+function getAppointments(): any[] {
+  if (!fs.existsSync(APPOINTMENTS_FILE)) return [];
+  try {
+    const data = fs.readFileSync(APPOINTMENTS_FILE, "utf-8");
+    return JSON.parse(data);
+  } catch (e) {
+    return [];
+  }
+}
+
+// Helper to save appointments
+function saveAppointments(appointments: any[]) {
+  fs.writeFileSync(APPOINTMENTS_FILE, JSON.stringify(appointments, null, 2));
+}
+
 async function startServer() {
   const app = express();
   const PORT = 3000;
@@ -31,6 +48,10 @@ async function startServer() {
   app.use(express.json());
 
   // API routes
+  app.get("/api/appointments", (req, res) => {
+    res.json(getAppointments());
+  });
+
   app.post("/api/subscribe", (req, res) => {
     const { email } = req.body;
     if (!email) return res.status(400).json({ error: "Email requis" });
@@ -98,10 +119,15 @@ async function startServer() {
   app.post("/api/appointments", async (req, res) => {
     const appointment = req.body;
     
+    // Save appointment
+    const appointments = getAppointments();
+    appointments.push(appointment);
+    saveAppointments(appointments);
+    
     // Check if email credentials are provided
     const emailUser = process.env.EMAIL_USER;
     const emailPass = process.env.EMAIL_PASS;
-    const emailTo = process.env.EMAIL_TO || "yombivictor@gmail.com";
+    const emailTo = process.env.EMAIL_TO || "gabrielyombi311@gmail.com";
 
     if (!emailUser || !emailPass) {
       console.warn("Email credentials missing. Logging appointment instead.");

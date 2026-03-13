@@ -64,7 +64,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
       if (navigator.share && navigator.canShare && navigator.canShare(shareData)) {
         await navigator.share(shareData);
       } else {
-        throw new Error('Web Share API non supportée ou non autorisée');
+        throw new Error(t.blog.shareError);
       }
     } catch (err) {
       // Fallback : Copie dans le presse-papier
@@ -74,7 +74,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
         // On réinitialise l'état après 3 secondes
         setTimeout(() => setShareStatus(null), 3000);
       } catch (clipErr) {
-        console.error('Impossible de copier le lien :', clipErr);
+        console.error(t.blog.copyError, clipErr);
         // alert('Lien : ' + shareUrl); // Dernier recours
       }
     }
@@ -157,7 +157,7 @@ const Blog: React.FC<BlogProps> = ({ lang, posts, onUpdatePost, isAdmin }) => {
                     <Calendar size={12}/> <span>{post.date}</span>
                   </span>
                   <span className="flex items-center space-x-2 text-panda-black/60 dark:text-panda-white/40">
-                    <User size={12}/> <span>Victor</span>
+                    <User size={12}/> <span>{t.blog.author}</span>
                   </span>
                 </div>
                 

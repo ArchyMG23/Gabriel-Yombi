@@ -17,15 +17,6 @@ interface ContactProps {
   settings: AppSettings;
 }
 
-const AVAILABLE_SERVICES = [
-  { id: 'Logotype', label: 'Logotype' },
-  { id: 'Branding', label: 'Brand Identity' },
-  { id: 'Social', label: 'Social Media' },
-  { id: 'Packaging', label: 'Packaging' },
-  { id: 'UIUX', label: 'Web Design' },
-  { id: 'Creative', label: 'Galerie Créative' }
-];
-
 const TIME_SLOTS = [
   '09:00', '10:00', '11:00', '14:00', '15:00', '16:00', '17:00'
 ];
@@ -33,6 +24,15 @@ const TIME_SLOTS = [
 const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments, settings }) => {
   const t = TRANSLATIONS[lang];
   const location = useLocation();
+
+  const AVAILABLE_SERVICES = useMemo(() => [
+    { id: 'Logotype', label: t.booking.availableServices.Logotype },
+    { id: 'Branding', label: t.booking.availableServices.Branding },
+    { id: 'Social', label: t.booking.availableServices.Social },
+    { id: 'Packaging', label: t.booking.availableServices.Packaging },
+    { id: 'UIUX', label: t.booking.availableServices.UIUX },
+    { id: 'Creative', label: t.booking.availableServices.Creative }
+  ], [t]);
   
   // Form State
   const [formData, setFormData] = useState({ 
@@ -324,7 +324,7 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
 
                   {/* Calendar Grid */}
                   <div className="grid grid-cols-7 gap-1 md:gap-2 text-center mb-4">
-                    {['D', 'L', 'M', 'M', 'J', 'V', 'S'].map((d, i) => (
+                    {t.booking.calendarDays.map((d, i) => (
                       <span key={`${d}-${i}`} className="text-[8px] md:text-[9px] font-black text-panda-black/40 dark:text-panda-white/20">{d}</span>
                     ))}
                   </div>
@@ -340,25 +340,28 @@ const Contact: React.FC<ContactProps> = ({ lang, onAddAppointment, appointments,
                       const isSelected = formData.date === dateString;
                       const isPast = date < today;
                       const isToday = date.getTime() === today.getTime();
-                      const isBusy = isDateBusy(date);
+                      const busySlotsCount = appointments.filter(a => a.date === dateString && a.status !== 'cancelled').length;
+                      const isFullyBusy = busySlotsCount >= TIME_SLOTS.length;
+                      const isPartiallyBusy = busySlotsCount > 0 && !isFullyBusy;
 
                       return (
                         <button
                           key={i}
                           type="button"
-                          disabled={isPast || isBusy}
+                          disabled={isPast || isFullyBusy}
                           onClick={() => selectDate(date)}
                           className={`aspect-square flex flex-col items-center justify-center rounded-xl text-xs font-bold transition-all relative overflow-hidden ${
                             isSelected 
                               ? 'bg-panda-gold text-panda-black scale-105 shadow-lg shadow-panda-gold/30' 
-                              : isPast || isBusy
+                              : isPast || isFullyBusy
                                 ? 'opacity-10 cursor-not-allowed' 
                                 : 'bg-panda-black/5 dark:bg-panda-white/5 hover:bg-panda-black/10 dark:hover:bg-panda-white/10 text-panda-black/70 dark:text-panda-white/70'
                           }`}
                         >
                           {date.getDate()}
                           {isToday && !isSelected && <div className="absolute bottom-1 w-1 h-1 rounded-full bg-panda-gold" />}
-                          {isBusy && <div className="absolute top-1 right-1 w-1 h-1 rounded-full bg-red-500" />}
+                          {isFullyBusy && <div className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-red-500/50" />}
+                          {isPartiallyBusy && !isSelected && <div className="absolute top-1 right-1 w-1.5 h-1.5 rounded-full bg-panda-gold/50" />}
                         </button>
                       );
                     })}

@@ -1,16 +1,17 @@
-import { ArrowRight, Box, Palette, Layout, Megaphone, Quote, BookOpen, User, Mail, Sparkles, Zap, Film } from 'lucide-react';
+import { ArrowRight, Box, Palette, Layout, Megaphone, Quote, BookOpen, User, Mail, Sparkles, Zap, Film, Star } from 'lucide-react';
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Language, Project, BlogPost, ProjectCategory } from '../types';
+import { Language, Project, BlogPost, ProjectCategory, Testimonial } from '../types';
 import { TRANSLATIONS } from '../constants';
 
 interface HomeProps {
   lang: Language;
   projects: Project[];
   posts: BlogPost[];
+  testimonials: Testimonial[];
 }
 
-const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
+const Home: React.FC<HomeProps> = ({ lang, projects, posts, testimonials }) => {
   const t = TRANSLATIONS[lang];
   const navigate = useNavigate();
 
@@ -211,6 +212,39 @@ const Home: React.FC<HomeProps> = ({ lang, projects, posts }) => {
               </Link>
             ))}
           </div>
+        </div>
+      </section>
+
+      {/* Testimonials Section - Social Proof */}
+      <section className="max-w-7xl mx-auto px-6 reveal">
+        <div className="text-center mb-20">
+          <span className="text-panda-gold font-display text-xs tracking-[0.6em] uppercase mb-6 block">{t.home.testimonialsTitle}</span>
+          <h2 className="text-5xl md:text-7xl font-display uppercase tracking-tighter leading-none">{t.home.testimonialsSubtitle}</h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+          {testimonials.map((testimonial) => (
+            <div key={testimonial.id} className="bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 p-12 rounded-[3rem] relative group hover:border-panda-gold transition-all duration-500">
+              <Quote className="absolute top-10 right-10 text-panda-gold/20 group-hover:text-panda-gold/40 transition-colors" size={60} />
+              <div className="flex items-center space-x-4 mb-8">
+                {[...Array(5)].map((_, i) => (
+                  <Star key={i} size={14} className="fill-panda-gold text-panda-gold" />
+                ))}
+              </div>
+              <p className="text-xl md:text-2xl font-light italic leading-relaxed mb-10 text-panda-black/80 dark:text-panda-white/80">
+                "{testimonial.content[lang]}"
+              </p>
+              <div className="flex items-center space-x-4">
+                <div className="w-14 h-14 rounded-full overflow-hidden border-2 border-panda-gold/30">
+                  <img src={testimonial.avatar} alt={testimonial.name} className="w-full h-full object-cover" />
+                </div>
+                <div>
+                  <h4 className="font-display text-lg uppercase tracking-tight">{testimonial.name}</h4>
+                  <p className="text-panda-gold text-xs font-bold uppercase tracking-widest">{testimonial.role[lang]}</p>
+                </div>
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 

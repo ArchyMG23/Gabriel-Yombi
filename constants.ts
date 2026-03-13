@@ -1,5 +1,5 @@
 
-import { ProjectCategory, Project, BlogPost } from './types';
+import { ProjectCategory, Project, BlogPost, Testimonial } from './types';
 
 export const TRANSLATIONS = {
   fr: {
@@ -34,7 +34,9 @@ export const TRANSLATIONS = {
       readArticles: 'Lire tous les articles',
       ctaTitle: 'Sublimons votre Projet',
       ctaDesc: 'Propulsez votre marque dans une nouvelle dimension visuelle avec Victor Gabriel Archange.',
-      ctaButton: 'Démarrer le voyage'
+      ctaButton: 'Démarrer le voyage',
+      testimonialsTitle: 'Preuve Sociale',
+      testimonialsSubtitle: 'Ce qu\'ils disent de Panda_Graphic',
     },
     portfolio: {
       title: 'Galerie de Réalisations',
@@ -43,6 +45,8 @@ export const TRANSLATIONS = {
       noResults: 'L\'atelier prépare de nouveaux chefs-d\'œuvre pour cette catégorie.',
       caseStudyTitle: 'Étude de Cas',
       description: 'Description',
+      problemLabel: 'Le Problème',
+      solutionLabel: 'La Solution Créative',
       process: 'Processus Créatif',
       startSimilar: 'Démarrer un projet similaire',
       categories: {
@@ -138,6 +142,7 @@ export const TRANSLATIONS = {
       noPosts: 'De nouveaux articles arrivent bientôt...',
       linkCopied: 'Lien copié',
       discoverPost: 'Découvrir l\'article',
+      author: 'Victor',
       by: 'Par Victor Gabriel Archange',
       likes: 'Likes',
       comments: 'Commentaires',
@@ -146,7 +151,37 @@ export const TRANSLATIONS = {
       submitComment: 'Envoyer mon avis',
       firstComment: 'Soyez le premier à réagir...',
       placeholderName: 'Archange Yombi',
-      placeholderText: 'Partagez vos impressions...'
+      placeholderText: 'Partagez vos impressions...',
+      shareError: 'Web Share API non supportée ou non autorisée',
+      copyError: 'Impossible de copier le lien :'
+    },
+    admin: {
+      accessReserved: 'Accès Réservé',
+      adminSpace: 'Espace administrateur Panda_Graphic',
+      unlock: 'DÉBLOQUER',
+      incorrectCode: 'Code incorrect',
+      dashboard: 'Dashboard',
+      management: 'Gestion du portfolio et du blog',
+      addProject: 'Ajouter une réalisation',
+      projectTitle: 'Titre du Projet',
+      shortDesc: 'Description Courte',
+      caseStudyProcess: 'Étude de Cas / Processus',
+      publishProject: 'PUBLIER LA RÉALISATION',
+      clickToLoadMedia: 'Cliquer pour charger un média',
+      newPost: 'Nouvel Article',
+      postTitle: 'Titre de l\'article',
+      postContent: 'Contenu de l\'article',
+      publishPost: 'PUBLIER L\'ARTICLE',
+      coverMedia: 'Média de couverture',
+      noAppointments: 'Aucun rendez-vous planifié pour le moment.',
+      confirmed: 'Confirmé',
+      pending: 'En attente',
+      siteSettings: 'Paramètres du Site',
+      socialNetworks: 'Réseaux Sociaux',
+      tagline: 'Texte sous Logo (Tagline)',
+      saveSettings: 'Enregistrer les Paramètres',
+      settingsUpdated: 'Paramètres mis à jour !',
+      appointmentUpdated: 'Rendez-vous mis à jour ! Le client a été notifié (simulation).'
     },
     booking: {
       title: 'Prendre RDV',
@@ -176,7 +211,16 @@ export const TRANSLATIONS = {
       finalize: 'Finaliser la réservation',
       alertService: 'Veuillez sélectionner au moins un service.',
       alertDateTime: 'Veuillez choisir une date et une heure dans le calendrier.',
-      thanksSubscribe: 'Merci pour votre inscription !'
+      thanksSubscribe: 'Merci pour votre inscription !',
+      calendarDays: ['D', 'L', 'M', 'M', 'J', 'V', 'S'],
+      availableServices: {
+        Logotype: 'Logotype',
+        Branding: 'Identité de Marque',
+        Social: 'Réseaux Sociaux',
+        Packaging: 'Packaging',
+        UIUX: 'Web Design',
+        Creative: 'Galerie Créative'
+      }
     },
     newsletter: { title: 'Newsletter', placeholder: 'Votre email', submit: 'S\'abonner' },
     footer: {
@@ -216,7 +260,9 @@ export const TRANSLATIONS = {
       readArticles: 'Read all articles',
       ctaTitle: 'Let\'s Sublimate your Project',
       ctaDesc: 'Propel your brand into a new visual dimension with Victor Gabriel Archange.',
-      ctaButton: 'Start the journey'
+      ctaButton: 'Start the journey',
+      testimonialsTitle: 'Social Proof',
+      testimonialsSubtitle: 'What they say about Panda_Graphic',
     },
     portfolio: {
       title: 'Gallery of Achievements',
@@ -225,6 +271,8 @@ export const TRANSLATIONS = {
       noResults: 'The workshop is preparing new masterpieces for this category.',
       caseStudyTitle: 'Case Study',
       description: 'Description',
+      problemLabel: 'The Problem',
+      solutionLabel: 'The Creative Solution',
       process: 'Creative Process',
       startSimilar: 'Start a similar project',
       categories: {
@@ -320,6 +368,7 @@ export const TRANSLATIONS = {
       noPosts: 'New articles coming soon...',
       linkCopied: 'Link copied',
       discoverPost: 'Discover the article',
+      author: 'Victor',
       by: 'By Victor Gabriel Archange',
       likes: 'Likes',
       comments: 'Comments',
@@ -328,7 +377,37 @@ export const TRANSLATIONS = {
       submitComment: 'Send my opinion',
       firstComment: 'Be the first to react...',
       placeholderName: 'Archange Yombi',
-      placeholderText: 'Share your impressions...'
+      placeholderText: 'Share your impressions...',
+      shareError: 'Web Share API not supported or not authorized',
+      copyError: 'Unable to copy link:'
+    },
+    admin: {
+      accessReserved: 'Access Reserved',
+      adminSpace: 'Panda_Graphic Administrator Space',
+      unlock: 'UNLOCK',
+      incorrectCode: 'Incorrect code',
+      dashboard: 'Dashboard',
+      management: 'Portfolio and blog management',
+      addProject: 'Add a realization',
+      projectTitle: 'Project Title',
+      shortDesc: 'Short Description',
+      caseStudyProcess: 'Case Study / Process',
+      publishProject: 'PUBLISH REALIZATION',
+      clickToLoadMedia: 'Click to load media',
+      newPost: 'New Article',
+      postTitle: 'Article Title',
+      postContent: 'Article Content',
+      publishPost: 'PUBLISH ARTICLE',
+      coverMedia: 'Cover Media',
+      noAppointments: 'No appointments scheduled at the moment.',
+      confirmed: 'Confirmed',
+      pending: 'Pending',
+      siteSettings: 'Site Settings',
+      socialNetworks: 'Social Networks',
+      tagline: 'Logo Tagline',
+      saveSettings: 'Save Settings',
+      settingsUpdated: 'Settings updated!',
+      appointmentUpdated: 'Appointment updated! The client has been notified (simulation).'
     },
     booking: {
       title: 'Book an Appointment',
@@ -358,7 +437,16 @@ export const TRANSLATIONS = {
       finalize: 'Finalize booking',
       alertService: 'Please select at least one service.',
       alertDateTime: 'Please choose a date and time in the calendar.',
-      thanksSubscribe: 'Thank you for subscribing!'
+      thanksSubscribe: 'Thank you for subscribing!',
+      calendarDays: ['S', 'M', 'T', 'W', 'T', 'F', 'S'],
+      availableServices: {
+        Logotype: 'Logotype',
+        Branding: 'Brand Identity',
+        Social: 'Social Media',
+        Packaging: 'Packaging',
+        UIUX: 'Web Design',
+        Creative: 'Creative Gallery'
+      }
     },
     newsletter: { title: 'Newsletter', placeholder: 'Your email', submit: 'Subscribe' },
     footer: {
@@ -398,7 +486,9 @@ export const TRANSLATIONS = {
       readArticles: 'Alle Artikel lesen',
       ctaTitle: 'Lassen Sie uns Ihr Projekt sublimieren',
       ctaDesc: 'Katapultieren Sie Ihre Marke mit Victor Gabriel Archange in eine neue visuelle Dimension.',
-      ctaButton: 'Die Reise beginnen'
+      ctaButton: 'Die Reise beginnen',
+      testimonialsTitle: 'Soziale Beweise',
+      testimonialsSubtitle: 'Was man über Panda_Graphic sagt',
     },
     portfolio: {
       title: 'Galerie der Errungenschaften',
@@ -407,6 +497,8 @@ export const TRANSLATIONS = {
       noResults: 'Die Werkstatt bereitet neue Meisterwerke für diese Kategorie vor.',
       caseStudyTitle: 'Fallstudie',
       description: 'Beschreibung',
+      problemLabel: 'Das Problem',
+      solutionLabel: 'Die kreative Lösung',
       process: 'Kreativer Prozess',
       startSimilar: 'Ein ähnliches Projekt starten',
       categories: {
@@ -502,6 +594,7 @@ export const TRANSLATIONS = {
       noPosts: 'Neue Artikel kommen bald...',
       linkCopied: 'Link kopiert',
       discoverPost: 'Artikel entdecken',
+      author: 'Victor',
       by: 'Von Victor Gabriel Archange',
       likes: 'Likes',
       comments: 'Kommentare',
@@ -510,7 +603,37 @@ export const TRANSLATIONS = {
       submitComment: 'Meine Meinung senden',
       firstComment: 'Seien Sie der Erste, der reagiert...',
       placeholderName: 'Archange Yombi',
-      placeholderText: 'Teilen Sie Ihre Eindrücke...'
+      placeholderText: 'Teilen Sie Ihre Eindrücke...',
+      shareError: 'Web Share API nicht unterstützt oder nicht autorisiert',
+      copyError: 'Link konnte nicht kopiert werden:'
+    },
+    admin: {
+      accessReserved: 'Zugang Reserviert',
+      adminSpace: 'Panda_Graphic Administratorbereich',
+      unlock: 'FREISCHALTEN',
+      incorrectCode: 'Falscher Code',
+      dashboard: 'Dashboard',
+      management: 'Portfolio- und Blog-Management',
+      addProject: 'Eine Realisierung hinzufügen',
+      projectTitle: 'Projekttitel',
+      shortDesc: 'Kurzbeschreibung',
+      caseStudyProcess: 'Fallstudie / Prozess',
+      publishProject: 'REALISIERUNG VERÖFFENTLICHEN',
+      clickToLoadMedia: 'Klicken zum Laden von Medien',
+      newPost: 'Neuer Artikel',
+      postTitle: 'Artikeltitel',
+      postContent: 'Artikelinhalt',
+      publishPost: 'ARTIKEL VERÖFFENTLICHEN',
+      coverMedia: 'Titelmedien',
+      noAppointments: 'Momentan sind keine Termine geplant.',
+      confirmed: 'Bestätigt',
+      pending: 'Ausstehend',
+      siteSettings: 'Seiteneinstellungen',
+      socialNetworks: 'Soziale Netzwerke',
+      tagline: 'Logo-Tagline',
+      saveSettings: 'Einstellungen speichern',
+      settingsUpdated: 'Einstellungen aktualisiert!',
+      appointmentUpdated: 'Termin aktualisiert! Der Kunde wurde benachrichtigt (Simulation).'
     },
     booking: {
       title: 'Termin vereinbaren',
@@ -540,7 +663,16 @@ export const TRANSLATIONS = {
       finalize: 'Buchung abschließen',
       alertService: 'Bitte wählen Sie mindestens einen Dienst aus.',
       alertDateTime: 'Bitte wählen Sie ein Datum und eine Uhrzeit im Kalender aus.',
-      thanksSubscribe: 'Vielen Dank für Ihr Abonnement!'
+      thanksSubscribe: 'Vielen Dank für Ihr Abonnement!',
+      calendarDays: ['S', 'M', 'D', 'M', 'D', 'F', 'S'],
+      availableServices: {
+        Logotype: 'Logotype',
+        Branding: 'Markenidentität',
+        Social: 'Social Media',
+        Packaging: 'Verpackung',
+        UIUX: 'Webdesign',
+        Creative: 'Kreativgalerie'
+      }
     },
     newsletter: { title: 'Newsletter', placeholder: 'Ihre E-Mail', submit: 'Abonnieren' },
     footer: {
@@ -558,6 +690,16 @@ export const INITIAL_PROJECTS: Project[] = [
     image: 'https://picsum.photos/seed/design1/800/600',
     mediaType: 'image',
     description: { fr: 'Une identité épurée pour spa de luxe.', en: 'Minimalist identity for luxury spa.', de: 'Minimalistische Identität für Luxus-Spa.' },
+    problem: { 
+      fr: 'Le client souhaitait une image apaisante pour se démarquer d\'un marché saturé.', 
+      en: 'The client wanted a soothing image to stand out from a saturated market.', 
+      de: 'Der Kunde wünschte sich ein beruhigendes Image, um sich von einem gesättigten Markt abzuheben.' 
+    },
+    solution: { 
+      fr: 'Utilisation de tons pastels et de lignes fluides pour évoquer la sérénité.', 
+      en: 'Use of pastel tones and fluid lines to evoke serenity.', 
+      de: 'Verwendung von Pastelltönen und flüssigen Linien, um Gelassenheit zu vermitteln.' 
+    },
     caseStudy: { fr: 'Analyse du besoin : Le client souhaitait une image apaisante. Solution : Utilisation de tons pastels et de lignes fluides.', en: 'Need analysis: The client wanted a soothing image. Solution: Use of pastel tones and fluid lines.', de: 'Bedarfsanalyse: Der Kunde wünschte sich ein beruhigendes Image. Lösung: Verwendung von Pastelltönen und flüssigen Linien.' }
   },
   {
@@ -567,6 +709,16 @@ export const INITIAL_PROJECTS: Project[] = [
     image: 'https://picsum.photos/seed/design2/800/600',
     mediaType: 'image',
     description: { fr: 'Gestion de campagne Instagram.', en: 'Instagram campaign management.', de: 'Instagram-Kampagnenmanagement.' },
+    problem: { 
+      fr: 'Engagement en baisse et manque de cohérence visuelle sur les réseaux.', 
+      en: 'Declining engagement and lack of visual consistency on social networks.', 
+      de: 'Sinkendes Engagement und mangelnde visuelle Konsistenz in sozialen Netzwerken.' 
+    },
+    solution: { 
+      fr: 'Création d\'une grille visuelle harmonieuse et de contenus interactifs.', 
+      en: 'Creation of a harmonious visual grid and interactive content.', 
+      de: 'Erstellung eines harmonischen visuellen Rasters und interaktiver Inhalte.' 
+    },
     caseStudy: { fr: 'Objectif : Augmenter l\'engagement de 20%. Résultat : +45% d\'interaction grâce à une grille visuelle harmonieuse.', en: 'Objective: Increase engagement by 20%. Result: +45% interaction thanks to a harmonious visual grid.', de: 'Ziel: Engagement um 20% steigern. Ergebnis: +45% Interaktion dank eines harmonischen visuellen Rasters.' }
   },
   {
@@ -576,7 +728,44 @@ export const INITIAL_PROJECTS: Project[] = [
     image: 'https://picsum.photos/seed/design3/800/600',
     mediaType: 'image',
     description: { fr: 'Packaging eco-friendly.', en: 'Eco-friendly packaging.', de: 'Umweltfreundliche Verpackung.' },
+    problem: { 
+      fr: 'Besoin d\'un emballage biodégradable qui reste luxueux.', 
+      en: 'Need for biodegradable packaging that remains luxurious.', 
+      de: 'Bedarf an einer biologisch abbaubaren Verpackung, die luxuriös bleibt.' 
+    },
+    solution: { 
+      fr: 'Conception d\'un emballage minimaliste avec des finitions premium.', 
+      en: 'Design of minimalist packaging with premium finishes.', 
+      de: 'Design einer minimalistischen Verpackung mit Premium-Oberflächen.' 
+    },
     caseStudy: { fr: 'Conception d\'un emballage biodégradable sans compromis sur l\'élégance.', en: 'Design of biodegradable packaging without compromising elegance.', de: 'Design einer biologisch abbaubaren Verpackung ohne Kompromisse bei der Eleganz.' }
+  }
+];
+
+export const INITIAL_TESTIMONIALS: Testimonial[] = [
+  {
+    id: '1',
+    name: 'Jean-Pierre N.',
+    role: { fr: 'CEO, Loum Coffee', en: 'CEO, Loum Coffee', de: 'CEO, Loum Coffee' },
+    content: {
+      fr: 'Victor a su transformer notre vision en une identité visuelle forte. Son approche stratégique a fait toute la différence.',
+      en: 'Victor was able to transform our vision into a strong visual identity. His strategic approach made all the difference.',
+      de: 'Victor konnte unsere Vision in eine starke visuelle Identität verwandeln. Sein strategischer Ansatz hat den Unterschied gemacht.'
+    },
+    project: { fr: 'Identité Visuelle Loum', en: 'Loum Visual Identity', de: 'Loum Visuelle Identität' },
+    avatar: 'https://picsum.photos/seed/jp/100/100'
+  },
+  {
+    id: '2',
+    name: 'Marie-Claire T.',
+    role: { fr: 'Fondatrice, Nkongsamba Fashion', en: 'Founder, Nkongsamba Fashion', de: 'Gründerin, Nkongsamba Fashion' },
+    content: {
+      fr: 'Un talent exceptionnel. Le packaging qu\'il a conçu pour nous est tout simplement magnifique et respecte nos valeurs.',
+      en: 'Exceptional talent. The packaging he designed for us is simply beautiful and respects our values.',
+      de: 'Außergewöhnliches Talent. Die Verpackung, die er für uns entworfen hat, ist einfach wunderschön und respektiert unsere Werte.'
+    },
+    project: { fr: 'Packaging Nkongsamba', en: 'Nkongsamba Packaging', de: 'Nkongsamba Verpackung' },
+    avatar: 'https://picsum.photos/seed/mc/100/100'
   }
 ];
 

@@ -21,7 +21,7 @@ const About: React.FC<{ lang: Language }> = ({ lang }) => {
             />
             <div className="absolute inset-0 bg-gradient-to-t from-panda-black/60 to-transparent" />
             <div className="absolute bottom-10 left-10">
-              <span className="bg-panda-gold text-panda-black px-4 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full">Fondateur</span>
+              <span className="bg-panda-gold text-panda-black px-4 py-1 text-[10px] font-bold uppercase tracking-widest rounded-full">{t.about.founder}</span>
             </div>
           </div>
         </div>

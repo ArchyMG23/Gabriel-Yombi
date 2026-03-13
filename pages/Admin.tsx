@@ -7,18 +7,21 @@ import {
   ArrowRight, Upload, ImageIcon, Film, X, FileText, CheckCircle, Clock, User,
   Heart, MessageCircle, Settings
 } from 'lucide-react';
-import { Project, BlogPost, Appointment, ProjectCategory, Language, AppSettings } from '../types';
-import { CATEGORIES } from '../constants';
+import { Project, BlogPost, Appointment, ProjectCategory, Language, AppSettings, Testimonial } from '../types';
+import { CATEGORIES, TRANSLATIONS } from '../constants';
 
 interface AdminProps {
   lang: Language;
   projects: Project[];
   posts: BlogPost[];
   appointments: Appointment[];
+  testimonials: Testimonial[];
   onAddProject: (p: Project) => void;
   onDeleteProject: (id: string) => void;
   onAddPost: (p: BlogPost) => void;
   onDeletePost: (id: string) => void;
+  onAddTestimonial: (t: Testimonial) => void;
+  onDeleteTestimonial: (id: string) => void;
   onUpdateAppointment: (a: Appointment) => void;
   onDeleteAppointment: (id: string) => void;
   settings: AppSettings;
@@ -30,12 +33,14 @@ interface AdminProps {
 const ADMIN_CODE = "PANDA2025";
 
 const Admin: React.FC<AdminProps> = ({ 
-  lang, projects, posts, appointments, 
+  lang, projects, posts, appointments, testimonials,
   onAddProject, onDeleteProject, onAddPost, onDeletePost,
+  onAddTestimonial, onDeleteTestimonial,
   onUpdateAppointment, onDeleteAppointment,
   settings, onUpdateSettings,
   isAdmin, setIsAdmin
 }) => {
+  const t = TRANSLATIONS[lang];
   const [tab, setTab] = useState<'projects' | 'blog' | 'appointments' | 'settings'>('projects');
   const [isGenerating, setIsGenerating] = useState(false);
   
@@ -56,8 +61,17 @@ const Admin: React.FC<AdminProps> = ({
   // Project form states
   const [newProjectTitle, setNewProjectTitle] = useState('');
   const [newProjectDesc, setNewProjectDesc] = useState('');
+  const [newProjectProblem, setNewProjectProblem] = useState('');
+  const [newProjectSolution, setNewProjectSolution] = useState('');
   const [newProjectCaseStudy, setNewProjectCaseStudy] = useState('');
   const [newProjectCategory, setNewProjectCategory] = useState<ProjectCategory>(ProjectCategory.GALLERY);
+  
+  // Testimonial form states
+  const [newTestimonialName, setNewTestimonialName] = useState('');
+  const [newTestimonialRole, setNewTestimonialRole] = useState('');
+  const [newTestimonialContent, setNewTestimonialContent] = useState('');
+  const [newTestimonialProject, setNewTestimonialProject] = useState('');
+
   const [previewMedia, setPreviewMedia] = useState<string | null>(null);
   const [mediaType, setMediaType] = useState<'image' | 'video'>('image');
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -105,9 +119,34 @@ const Admin: React.FC<AdminProps> = ({
   const resetProjectForm = () => {
     setNewProjectTitle('');
     setNewProjectDesc('');
+    setNewProjectProblem('');
+    setNewProjectSolution('');
     setNewProjectCaseStudy('');
     setPreviewMedia(null);
     if (fileInputRef.current) fileInputRef.current.value = '';
+  };
+
+  const handleAddTestimonial = () => {
+    if (!newTestimonialName || !newTestimonialContent) return;
+    
+    const testimonial: Testimonial = {
+      id: Date.now().toString(),
+      name: newTestimonialName,
+      role: { fr: newTestimonialRole, en: newTestimonialRole, de: newTestimonialRole },
+      content: { fr: newTestimonialContent, en: newTestimonialContent, de: newTestimonialContent },
+      project: { fr: newTestimonialProject, en: newTestimonialProject, de: newTestimonialProject }
+    };
+
+    onAddTestimonial(testimonial);
+
+    setNewTestimonialName('');
+    setNewTestimonialRole('');
+    setNewTestimonialContent('');
+    setNewTestimonialProject('');
+  };
+
+  const handleDeleteTestimonial = (id: string) => {
+    onDeleteTestimonial(id);
   };
 
   const resetBlogForm = () => {
@@ -129,6 +168,8 @@ const Admin: React.FC<AdminProps> = ({
         image: previewMedia,
         mediaType: mediaType,
         description: { fr: newProjectDesc, en: newProjectDesc, de: newProjectDesc },
+        problem: { fr: newProjectProblem, en: newProjectProblem, de: newProjectProblem },
+        solution: { fr: newProjectSolution, en: newProjectSolution, de: newProjectSolution },
         caseStudy: { fr: newProjectCaseStudy, en: newProjectCaseStudy, de: newProjectCaseStudy }
       };
 
@@ -178,7 +219,7 @@ const Admin: React.FC<AdminProps> = ({
     };
     onUpdateAppointment(updated);
     setEditingAppointment(null);
-    alert('Rendez-vous mis à jour ! Le client a été notifié (simulation).');
+    alert(t.admin.appointmentUpdated);
   };
 
   const handleSaveSettings = () => {
@@ -194,7 +235,7 @@ const Admin: React.FC<AdminProps> = ({
         de: taglineDe
       }
     });
-    alert('Paramètres mis à jour !');
+    alert(t.admin.settingsUpdated);
   };
 
   if (!isAdmin) {
@@ -204,8 +245,8 @@ const Admin: React.FC<AdminProps> = ({
           <div className="w-20 h-20 bg-panda-gold/10 text-panda-gold rounded-full flex items-center justify-center mx-auto mb-8 border border-panda-gold/20">
             <Lock size={32} />
           </div>
-          <h1 className="text-3xl font-display font-bold mb-2 uppercase tracking-tighter text-panda-black dark:text-panda-white">Accès Réservé</h1>
-          <p className="text-panda-black/40 dark:text-panda-white/40 text-sm mb-10 font-light">Espace administrateur Panda_Graphic</p>
+          <h1 className="text-3xl font-display font-bold mb-2 uppercase tracking-tighter text-panda-black dark:text-panda-white">{t.admin.accessReserved}</h1>
+          <p className="text-panda-black/40 dark:text-panda-white/40 text-sm mb-10 font-light">{t.admin.adminSpace}</p>
           <form onSubmit={handleAuth} className="space-y-6">
             <input 
               type="password"
@@ -216,9 +257,9 @@ const Admin: React.FC<AdminProps> = ({
                 error ? 'border-red-500 animate-shake' : 'border-panda-black/10 dark:border-panda-white/10 focus:border-panda-gold'
               }`}
             />
-            {error && <p className="text-red-500 text-xs font-bold uppercase tracking-widest">Code incorrect</p>}
+            {error && <p className="text-red-500 text-xs font-bold uppercase tracking-widest">{t.admin.incorrectCode}</p>}
             <button className="w-full py-5 bg-panda-gold text-panda-black font-bold uppercase tracking-[0.3em] rounded-xl hover:bg-panda-gold/90 transition-all flex items-center justify-center space-x-3">
-              <span>DÉBLOQUER</span>
+              <span>{t.admin.unlock}</span>
               <ArrowRight size={18} />
             </button>
           </form>
@@ -235,25 +276,25 @@ const Admin: React.FC<AdminProps> = ({
             <Unlock size={24} />
           </div>
           <div>
-            <h1 className="text-4xl font-display font-bold uppercase tracking-tighter text-panda-black dark:text-panda-white">Dashboard <span className="text-panda-gold">Victor</span></h1>
-            <p className="text-panda-black/40 dark:text-panda-white/40 font-light">Gestion du portfolio et du blog</p>
+            <h1 className="text-4xl font-display font-bold uppercase tracking-tighter text-panda-black dark:text-panda-white">{t.admin.dashboard} <span className="text-panda-gold">Victor</span></h1>
+            <p className="text-panda-black/40 dark:text-panda-white/40 font-light">{t.admin.management}</p>
           </div>
         </div>
         <div className="flex bg-panda-black/5 dark:bg-panda-white/5 p-1 rounded-2xl border border-panda-black/10 dark:border-panda-white/10 overflow-x-auto no-scrollbar">
           {[
-            { id: 'projects', icon: <Layout size={18} />, label: 'Portfolio' },
-            { id: 'blog', icon: <BookOpen size={18} />, label: 'Blog' },
-            { id: 'appointments', icon: <Calendar size={18} />, label: 'Rendez-vous' },
+            { id: 'projects', icon: <Layout size={18} />, label: t.nav.portfolio },
+            { id: 'blog', icon: <BookOpen size={18} />, label: t.nav.blog },
+            { id: 'appointments', icon: <Calendar size={18} />, label: t.nav.contact },
             { id: 'settings', icon: <Settings size={18} />, label: 'Settings' }
-          ].map(t => (
+          ].map(t_item => (
             <button
-              key={t.id}
-              onClick={() => setTab(t.id as any)}
+              key={t_item.id}
+              onClick={() => setTab(t_item.id as any)}
               className={`flex items-center space-x-2 px-6 py-3 rounded-xl transition-all uppercase tracking-[0.2em] text-[10px] font-black whitespace-nowrap ${
-                tab === t.id ? 'bg-panda-gold text-panda-black shadow-lg shadow-panda-gold/20' : 'hover:bg-panda-black/5 dark:hover:bg-panda-white/5 text-panda-black/40 dark:text-panda-white/40 hover:text-panda-black dark:hover:text-panda-white'
+                tab === t_item.id ? 'bg-panda-gold text-panda-black shadow-lg shadow-panda-gold/20' : 'hover:bg-panda-black/5 dark:hover:bg-panda-white/5 text-panda-black/40 dark:text-panda-white/40 hover:text-panda-black dark:hover:text-panda-white'
               }`}
             >
-              {t.icon} <span>{t.label}</span>
+              {t_item.icon} <span>{t_item.label}</span>
             </button>
           ))}
         </div>
@@ -264,12 +305,12 @@ const Admin: React.FC<AdminProps> = ({
           <div className="bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 p-10 rounded-[2.5rem]">
             <h3 className="text-2xl font-display font-bold mb-8 flex items-center space-x-3 uppercase tracking-tighter text-panda-black dark:text-panda-white">
               <Plus size={24} className="text-panda-gold" /> 
-              <span>Ajouter une réalisation</span>
+              <span>{t.admin.addProject}</span>
             </h3>
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
               <div className="space-y-6">
                 <input 
-                  placeholder="Titre du Projet" 
+                  placeholder={t.admin.projectTitle} 
                   value={newProjectTitle}
                   onChange={(e) => setNewProjectTitle(e.target.value)}
                   className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold text-panda-black dark:text-panda-white" 
@@ -282,13 +323,25 @@ const Admin: React.FC<AdminProps> = ({
                   {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
                 </select>
                 <textarea 
-                  placeholder="Description Courte" 
+                  placeholder={t.admin.shortDesc} 
                   value={newProjectDesc}
                   onChange={(e) => setNewProjectDesc(e.target.value)}
                   className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold h-24 text-panda-black dark:text-panda-white" 
                 />
                 <textarea 
-                  placeholder="Étude de Cas / Processus" 
+                  placeholder="Le Problème (The Problem)" 
+                  value={newProjectProblem}
+                  onChange={(e) => setNewProjectProblem(e.target.value)}
+                  className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold h-24 text-panda-black dark:text-panda-white" 
+                />
+                <textarea 
+                  placeholder="La Solution (The Solution)" 
+                  value={newProjectSolution}
+                  onChange={(e) => setNewProjectSolution(e.target.value)}
+                  className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold h-24 text-panda-black dark:text-panda-white" 
+                />
+                <textarea 
+                  placeholder={t.admin.caseStudyProcess} 
                   value={newProjectCaseStudy}
                   onChange={(e) => setNewProjectCaseStudy(e.target.value)}
                   className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold h-40 text-panda-black dark:text-panda-white" 
@@ -298,7 +351,7 @@ const Admin: React.FC<AdminProps> = ({
                   disabled={!newProjectTitle || !previewMedia || isGenerating}
                   className="w-full py-5 bg-panda-gold text-panda-black font-black uppercase tracking-widest rounded-2xl disabled:opacity-30 flex items-center justify-center space-x-3"
                 >
-                  {isGenerating ? <Loader2 className="animate-spin" size={20} /> : 'PUBLIER LA RÉALISATION'}
+                  {isGenerating ? <Loader2 className="animate-spin" size={20} /> : t.admin.publishProject}
                 </button>
               </div>
               <div className="flex flex-col">
@@ -314,7 +367,7 @@ const Admin: React.FC<AdminProps> = ({
                    ) : (
                      <div className="text-center opacity-30 uppercase font-black tracking-widest text-[10px] space-y-4">
                         <ImageIcon size={48} className="mx-auto mb-4" />
-                        <div>Cliquer pour charger un média</div>
+                        <div>{t.admin.clickToLoadMedia}</div>
                      </div>
                    )}
                 </div>
@@ -342,20 +395,20 @@ const Admin: React.FC<AdminProps> = ({
             <div className="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-10">
                <h3 className="text-2xl font-display font-bold flex items-center space-x-3 uppercase tracking-tighter text-panda-black dark:text-panda-white">
                  <BookOpen size={24} className="text-panda-gold" /> 
-                 <span>Nouvel Article</span>
+                 <span>{t.admin.newPost}</span>
                </h3>
             </div>
 
             <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
                <div className="space-y-6">
                  <input 
-                    placeholder="Titre de l'article" 
+                    placeholder={t.admin.postTitle} 
                     value={blogTitle}
                     onChange={(e) => setBlogTitle(e.target.value)}
                     className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold text-panda-black dark:text-panda-white" 
                  />
                  <textarea 
-                    placeholder="Contenu de l'article" 
+                    placeholder={t.admin.postContent} 
                     value={blogContent}
                     onChange={(e) => setBlogContent(e.target.value)}
                     className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold h-64 text-panda-black dark:text-panda-white" 
@@ -365,7 +418,7 @@ const Admin: React.FC<AdminProps> = ({
                     disabled={!blogTitle || !blogMedia || isGenerating}
                     className="w-full py-5 bg-panda-gold text-panda-black font-black uppercase tracking-widest rounded-2xl disabled:opacity-30 flex items-center justify-center space-x-3"
                  >
-                   {isGenerating ? <Loader2 className="animate-spin" size={20} /> : 'PUBLIER L\'ARTICLE'}
+                   {isGenerating ? <Loader2 className="animate-spin" size={20} /> : t.admin.publishPost}
                  </button>
                </div>
                <div className="flex flex-col">
@@ -381,7 +434,7 @@ const Admin: React.FC<AdminProps> = ({
                    ) : (
                      <div className="text-center opacity-30 uppercase font-black tracking-widest text-[10px] space-y-4">
                         <ImageIcon size={48} className="mx-auto mb-4" />
-                        <div>Média de couverture</div>
+                        <div>{t.admin.coverMedia}</div>
                      </div>
                    )}
                  </div>
@@ -417,7 +470,7 @@ const Admin: React.FC<AdminProps> = ({
           {appointments.length === 0 ? (
             <div className="text-center py-40 bg-panda-black/5 dark:bg-panda-white/5 border border-dashed border-panda-black/10 dark:border-panda-white/10 rounded-[3rem]">
                <Calendar size={60} className="mx-auto mb-6 text-panda-black/10 dark:text-panda-white/10" />
-               <p className="text-panda-black/40 dark:text-panda-white/40 uppercase tracking-widest font-black text-xs">Aucun rendez-vous planifié pour le moment.</p>
+               <p className="text-panda-black/40 dark:text-panda-white/40 uppercase tracking-widest font-black text-xs">{t.admin.noAppointments}</p>
             </div>
           ) : (
             <div className="grid grid-cols-1 gap-6">
@@ -447,7 +500,7 @@ const Admin: React.FC<AdminProps> = ({
                           </div>
                           <div className={`text-[9px] uppercase font-black tracking-widest flex items-center justify-end space-x-2 ${app.status === 'confirmed' ? 'text-panda-green' : 'text-amber-500'}`}>
                              {app.status === 'confirmed' ? <CheckCircle size={10} /> : <Clock size={10} />}
-                             <span>{app.status === 'confirmed' ? 'Confirmé' : 'En attente'}</span>
+                             <span>{app.status === 'confirmed' ? t.admin.confirmed : t.admin.pending}</span>
                           </div>
                        </div>
                        <button className="p-4 bg-panda-black/5 dark:bg-panda-white/5 rounded-2xl hover:bg-panda-gold hover:text-panda-black transition-all text-panda-black dark:text-panda-white">
@@ -463,15 +516,87 @@ const Admin: React.FC<AdminProps> = ({
 
       {tab === 'settings' && (
         <div className="max-w-2xl mx-auto space-y-12 animate-in slide-in-from-bottom-10 duration-700">
+          {/* Testimonials Management */}
+          <div className="bg-panda-white/5 dark:bg-panda-white/5 backdrop-blur-xl rounded-[3rem] p-12 border border-panda-black/10 dark:border-panda-white/10">
+            <div className="flex items-center gap-3 mb-8">
+              <div className="w-12 h-12 rounded-2xl bg-panda-gold/20 flex items-center justify-center">
+                <MessageCircle className="text-panda-gold" size={24} />
+              </div>
+              <div>
+                <h2 className="text-2xl font-display font-bold text-panda-black dark:text-panda-white">Témoignages</h2>
+                <p className="text-panda-black/60 dark:text-panda-white/60">Gérez les retours clients</p>
+              </div>
+            </div>
+
+            <div className="space-y-8">
+              {/* Add Testimonial Form */}
+              <div className="grid grid-cols-1 gap-4">
+                <input 
+                  type="text" 
+                  placeholder="Nom du client" 
+                  value={newTestimonialName}
+                  onChange={(e) => setNewTestimonialName(e.target.value)}
+                  className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold text-panda-black dark:text-panda-white" 
+                />
+                <input 
+                  type="text" 
+                  placeholder="Rôle / Entreprise" 
+                  value={newTestimonialRole}
+                  onChange={(e) => setNewTestimonialRole(e.target.value)}
+                  className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold text-panda-black dark:text-panda-white" 
+                />
+                <input 
+                  type="text" 
+                  placeholder="Projet réalisé" 
+                  value={newTestimonialProject}
+                  onChange={(e) => setNewTestimonialProject(e.target.value)}
+                  className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold text-panda-black dark:text-panda-white" 
+                />
+                <textarea 
+                  placeholder="Contenu du témoignage" 
+                  value={newTestimonialContent}
+                  onChange={(e) => setNewTestimonialContent(e.target.value)}
+                  className="w-full bg-white dark:bg-panda-black/50 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl outline-none focus:border-panda-gold h-32 text-panda-black dark:text-panda-white" 
+                />
+                <button 
+                  onClick={handleAddTestimonial}
+                  className="w-full bg-panda-gold text-panda-black font-bold py-5 rounded-2xl hover:bg-panda-gold/90 transition-all flex items-center justify-center gap-2"
+                >
+                  <Plus size={20} />
+                  Ajouter le témoignage
+                </button>
+              </div>
+
+              {/* Testimonials List */}
+              <div className="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scrollbar">
+                {testimonials.map(testimonial => (
+                  <div key={testimonial.id} className="bg-white dark:bg-panda-black/30 border border-panda-black/10 dark:border-panda-white/10 p-5 rounded-2xl flex justify-between items-start gap-4">
+                    <div>
+                      <h4 className="font-bold text-panda-black dark:text-panda-white">{testimonial.name}</h4>
+                      <p className="text-sm text-panda-gold">{testimonial.role.fr}</p>
+                      <p className="text-sm text-panda-black/70 dark:text-panda-white/70 mt-2 italic">"{testimonial.content.fr}"</p>
+                    </div>
+                    <button 
+                      onClick={() => handleDeleteTestimonial(testimonial.id)}
+                      className="p-2 text-red-500 hover:bg-red-500/10 rounded-xl transition-all"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+
           <div className="bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10 rounded-[3rem] p-12 backdrop-blur-xl">
             <h2 className="text-2xl font-display font-bold mb-8 uppercase tracking-tighter text-panda-black dark:text-panda-white flex items-center gap-4">
-              <Settings className="text-panda-gold" /> Paramètres du Site
+              <Settings className="text-panda-gold" /> {t.admin.siteSettings}
             </h2>
             
             <div className="space-y-8">
               {/* Social Links */}
               <div className="space-y-4">
-                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-panda-gold">Réseaux Sociaux</h3>
+                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-panda-gold">{t.admin.socialNetworks}</h3>
                 <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 ml-4">Facebook URL</label>
@@ -505,7 +630,7 @@ const Admin: React.FC<AdminProps> = ({
 
               {/* Tagline */}
               <div className="space-y-4">
-                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-panda-gold">Texte sous Logo (Tagline)</h3>
+                <h3 className="text-xs font-black uppercase tracking-[0.3em] text-panda-gold">{t.admin.tagline}</h3>
                 <div className="grid grid-cols-1 gap-4">
                   <div className="space-y-2">
                     <label className="text-[10px] font-black uppercase tracking-widest text-panda-black/40 dark:text-panda-white/40 ml-4">Français</label>
@@ -542,7 +667,7 @@ const Admin: React.FC<AdminProps> = ({
                 className="w-full py-6 bg-panda-gold text-panda-black font-black uppercase tracking-[0.3em] rounded-2xl hover:bg-panda-gold/90 transition-all shadow-xl shadow-panda-gold/20 flex items-center justify-center gap-3"
               >
                 <CheckCircle size={20} />
-                Enregistrer les Paramètres
+                {t.admin.saveSettings}
               </button>
             </div>
           </div>

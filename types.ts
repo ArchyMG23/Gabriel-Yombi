@@ -18,7 +18,18 @@ export interface Project {
   image: string; 
   mediaType: 'image' | 'video';
   description: { fr: string; en: string; de: string };
+  problem: { fr: string; en: string; de: string };
+  solution: { fr: string; en: string; de: string };
   caseStudy: { fr: string; en: string; de: string };
+}
+
+export interface Testimonial {
+  id: string;
+  name: string;
+  role: { fr: string; en: string; de: string };
+  content: { fr: string; en: string; de: string };
+  project?: { fr: string; en: string; de: string };
+  avatar?: string;
 }
 
 export interface BlogComment {

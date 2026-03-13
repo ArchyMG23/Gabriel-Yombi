@@ -204,6 +204,21 @@ const Portfolio: React.FC<PortfolioProps> = ({ lang, projects }) => {
                   </p>
                 </div>
 
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  <div className="p-8 rounded-[2rem] bg-panda-black/5 dark:bg-panda-white/5 border border-panda-black/10 dark:border-panda-white/10">
+                    <h4 className="text-panda-gold text-[10px] uppercase font-black tracking-widest mb-4">{t.portfolio.problemLabel}</h4>
+                    <p className="text-panda-black/70 dark:text-panda-white/60 text-base leading-relaxed font-light">
+                      {selectedProject.problem[lang]}
+                    </p>
+                  </div>
+                  <div className="p-8 rounded-[2rem] bg-panda-gold/5 border border-panda-gold/20">
+                    <h4 className="text-panda-gold text-[10px] uppercase font-black tracking-widest mb-4">{t.portfolio.solutionLabel}</h4>
+                    <p className="text-panda-black/70 dark:text-panda-white/60 text-base leading-relaxed font-light">
+                      {selectedProject.solution[lang]}
+                    </p>
+                  </div>
+                </div>
+
                 <div className="p-10 rounded-[2rem] marble-texture border border-panda-black/5 dark:border-panda-white/5 shadow-inner bg-panda-black/5 dark:bg-panda-white/5">
                   <h4 className="text-panda-black/60 dark:text-panda-white/40 text-[10px] uppercase font-black tracking-widest mb-6">{t.portfolio.process}</h4>
                   <div className="text-panda-black dark:text-panda-white text-lg leading-relaxed space-y-4 whitespace-pre-line font-medium">
