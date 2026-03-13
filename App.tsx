@@ -82,7 +82,7 @@ const App: React.FC = () => {
       socialLinks: {
         facebook: 'https://facebook.com/panda_graphic',
         instagram: 'https://instagram.com/panda_graphic',
-        whatsapp: '654491319'
+        whatsapp: '+237 654 491 319'
       },
       logoTagline: {
         fr: 'L\'excellence visuelle par Victor Gabriel Archange',
@@ -402,7 +402,7 @@ const App: React.FC = () => {
                   <Instagram size={20} />
                 </a>
                 <a 
-                  href={`https://wa.me/${settings.socialLinks.whatsapp}`} 
+                  href={`https://wa.me/${settings.socialLinks.whatsapp.replace(/\D/g, '')}`} 
                   target="_blank" 
                   rel="noopener noreferrer"
                   className="p-2 bg-panda-black/5 dark:bg-panda-white/5 rounded-full hover:bg-panda-gold hover:text-panda-black transition-all text-panda-black dark:text-panda-white"
